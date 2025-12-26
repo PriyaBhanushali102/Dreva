@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { FaBox, FaShippingFast, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 function OrderHistory() {
-    const { user, isAuthenticated } = useAuth();
+    const { user,isVendor, isAuthenticated } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -135,12 +135,13 @@ function OrderHistory() {
             <div>
             {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">My Orders</h1>
+                    <h1 className="text-4xl font-bold text-gray-900 mt-5 mb-2">My Orders</h1>
                     <p className="text-gray-600">Track and manage your orders</p>
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="flex gap-2 mb-6 overflow-x-auto border-b pb-2">
+                {isVendor && (
+                    <div className="flex gap-2 mb-6 overflow-x-auto border-b pb-2">
                     {["all", "Processing", "Shipped", "Delivered"].map((status) => (
                         <button
                             key={status}
@@ -155,7 +156,8 @@ function OrderHistory() {
                             {status === "all" && ` (${orders.length})`}
                         </button>
                     ))}
-                </div>
+                    </div>
+                )}
 
                  {/* Orders List */}
                 {filteredOrders.length === 0 ? (
@@ -269,11 +271,6 @@ function OrderHistory() {
 
                                         {/* Action Buttons */}
                                         <div className="flex gap-3">
-                                            <Link to={`/orders/${order._id}`}>
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6">
-                                                    View Details
-                                                </Button>
-                                            </Link>
                                             
                                             {order.status === "Processing" && (
                                                 <Button

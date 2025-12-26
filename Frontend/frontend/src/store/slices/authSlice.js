@@ -14,6 +14,7 @@ const authSlice = createSlice({
   reducers: {
     hydrateAuth: (state, action) => {
       state.user = action.payload.user;
+      state.token = action.payload.token;
       state.isVendor = action.payload.isVendor;
     },
     setLoading: (state, action) => {

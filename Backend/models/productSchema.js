@@ -29,7 +29,7 @@ const productSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["Home", "Fashion", "Toys", "Gadgets"], // Electornics, cloting, Accessories
+      enum: ["Home", "Fashion", "Toys", "Gadgets"],
     },
     quantity: {
       type: Number,
@@ -51,7 +51,7 @@ const productSchema = new Schema(
       type: Number,
       min: 1,
       max: 5,
-      default: 1,
+      default: 3,
     },
     reviews: {
       type: [Schema.Types.ObjectId],

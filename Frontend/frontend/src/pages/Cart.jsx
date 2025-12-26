@@ -22,9 +22,9 @@ function Cart() {
     return (
         <Container>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> 
-                <div className="lg:col-span-2">
+                <div className={isEmpty ? "lg:col-span-3" : "lg:col-span-2"}>
                     {isEmpty ? (
-                        <div className="text-center py-16">
+                        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your cart is empty</h2>
                             <Button onClick={() => navigate("/products")}
                                 className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
