@@ -9,6 +9,10 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => { 
+    // axios.js ya App.jsx mein add karo
+console.log('All Env Variables:', import.meta.env);
+console.log('API URL:', import.meta.env.VITE_API_URL);
+console.log('Mode:', import.meta.env.MODE);
     const token = localStorage.getItem('token');
     const user = localStorage.getItem("user");
     if (token && user) {
