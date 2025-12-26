@@ -58,7 +58,7 @@ function Header() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search Products..."
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-black-200 placeholder-gray-400 focus:outline-none"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none"
                                 />
                                 <Button
                                     type="submit"
