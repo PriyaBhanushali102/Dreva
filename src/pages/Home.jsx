@@ -4,9 +4,9 @@ import { FaArrowRight, FaFire, FaStar, FaTags } from "react-icons/fa";
 import { useProducts } from "../hooks/useProducts";
 import { Link } from "react-router-dom";
 import {Button, Loader} from "../components/index"
-import { useAuth} from "../hooks/useAuth"
+import { useSelector } from "react-redux";
 function Home() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const [filters, setFilters] = useState({
         q: "",
         category: "",
@@ -44,13 +44,15 @@ function Home() {
                                         className="bg-white text-black hover:bg-gray px-8 py-3 text-lg font-semibold shadow-lg">
                                     Shop Now <FaArrowRight className="inline ml-2" />
                                 </Button>
-                            </Link>
+                                </Link>
+                                
+                            {!isAuthenticated && (
                             <Link to="/register">
-                                    <Button
-                                        className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg font-semibold">
+                                <Button
+                                    className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg font-semibold">
                                     Sign Up
                                 </Button>
-                            </Link>
+                            </Link>)}
                         </div>
                     </div>
                 </Container>
