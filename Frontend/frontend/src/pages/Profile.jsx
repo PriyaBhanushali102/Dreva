@@ -16,13 +16,15 @@ function Profile() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        phone: "",
     })
 
     useEffect(() => {
         if (user) {
             setFormData({
-                namw: user.name || "",
+                name: user.name || "",
                 email: user.email || "",
+                phone: user.phone || "",
             })
         }
     }, [user])
@@ -37,7 +39,7 @@ function Profile() {
             const updatedUser = {
                 ...user,
                 name: formData.name,
-                email: formData.email,
+                phone: formData.phone,
 
             }
             dispatch(updateProfile(updatedUser));
@@ -108,6 +110,7 @@ function Profile() {
 
                     <Input
                         label="Email"
+                        name="email"
                         value={formData.email}
                         disabled
                     />

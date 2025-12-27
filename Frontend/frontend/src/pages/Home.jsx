@@ -45,12 +45,13 @@ function Home() {
                                     Shop Now <FaArrowRight className="inline ml-2" />
                                 </Button>
                             </Link>
-                            <Link to="/register">
+                            {!isAuthenticated &&
+                            (<Link to="/register">
                                     <Button
                                         className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg font-semibold">
                                     Sign Up
                                 </Button>
-                            </Link>
+                            </Link>)}
                         </div>
                     </div>
                 </Container>
@@ -144,7 +145,7 @@ function Home() {
                             <p className="text-gray-500">Check back soon for amazing deals!</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:1grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             {products.map((product) => (
                                 <ProductCard key={product._id} product={product} />
                             ))}
