@@ -27,47 +27,49 @@ function Home() {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="bg-gray-900 text-white py-16">
+            <section className="bg-white border-b">
                 <Container>
-                    <div className="max-w-2xl">
-                        <h1 className="text-4xl font-bold mb-4">
-                            Quality Products, Great Prices
-                        </h1>
-                        <p className="text-lg text-gray-300 mb-6">
-                            Shop the latest products from top brands
-                        </p>
-                        <div className="flex gap-3">
-                            <Link to="/products">
-                                <Button className="bg-white text-gray-900 hover:bg-gray-100 px-6 py-2">
-                                    Shop Now
-                                </Button>
-                            </Link>
-                            {!isAuthenticated && (
-                                <Link to="/register">
-                                    <Button className="bg-transparent border border-white text-white hover:bg-white hover:text-gray-900 px-6 py-2">
-                                        Sign Up
+                    <div className="py-16 md:py-20">
+                        <div className="max-w-3xl">
+                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                                Find Quality Products at Great Prices
+                            </h1>
+                            <p className="text-lg text-gray-600 mb-8">
+                                Browse our collection of carefully selected products for your everyday needs
+                            </p>
+                            <div className="flex gap-4">
+                                <Link to="/products">
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5">
+                                        Shop Now
                                     </Button>
                                 </Link>
-                            )}
+                                {!isAuthenticated && (
+                                    <Link to="/register">
+                                        <Button className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2.5">
+                                            Sign Up
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </Container>
             </section>
 
             {/* Categories Section */}
-            <section className="py-12 border-b">
+            <section className="py-12 bg-white">
                 <Container>
-                    <h2 className="text-2xl font-semibold mb-6">Shop by Category</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Shop by Category</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {categories.map((category) => (
                             <Link
                                 key={category.value}
                                 to={`/products?category=${category.value}`}
-                                className="border rounded-lg p-6 hover:border-gray-900 hover:shadow-sm transition-all"
+                                className="bg-gray-50 border border-gray-200 rounded-lg p-8 hover:border-blue-600 hover:bg-blue-50 transition-all text-center"
                             >
-                                <h3 className="text-lg font-medium text-gray-900">
+                                <h3 className="text-lg font-semibold text-gray-900">
                                     {category.name}
                                 </h3>
                             </Link>
@@ -77,22 +79,25 @@ function Home() {
             </section>
 
             {/* Featured Products Section */}
-            <section className="py-12">
+            <section className="py-12 bg-gray-50">
                 <Container>
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-semibold">Featured Products</h2>
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
                         <Link to="/products">
-                            <Button className="flex items-center gap-2 text-sm">
+                            <Button className="flex items-center gap-2 text-sm border border-gray-300 hover:bg-gray-100">
                                 View All <FaArrowRight className="text-xs" />
                             </Button>
                         </Link>
                     </div>
 
                     {loading ? (
-                        <Loader />
+                        <div className="flex justify-center py-12">
+                            <Loader />
+                        </div>
                     ) : products.length === 0 ? (
-                        <div className="text-center py-16">
-                            <p className="text-lg text-gray-600">No products available</p>
+                        <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
+                            <p className="text-lg text-gray-600 mb-2">No products available yet</p>
+                            <p className="text-sm text-gray-500">Check back soon for new arrivals</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -103,6 +108,27 @@ function Home() {
                     )}
                 </Container>
             </section>
+
+            {/* CTA Section */}
+            {!isAuthenticated && (
+                <section className="py-16 bg-white border-t">
+                    <Container>
+                        <div className="max-w-2xl mx-auto text-center">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                                Ready to Get Started?
+                            </h2>
+                            <p className="text-lg text-gray-600 mb-8">
+                                Create an account to start shopping and track your orders
+                            </p>
+                            <Link to="/register">
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                                    Create Account
+                                </Button>
+                            </Link>
+                        </div>
+                    </Container>
+                </section>
+            )}
         </div>
     );
 }
