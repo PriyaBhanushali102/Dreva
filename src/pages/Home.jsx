@@ -29,7 +29,7 @@ function Home() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="bg-white border-b">
+            <section className="bg-gray-50 border-b">
                 <Container>
                     <div className="py-16 md:py-20">
                         <div className="max-w-3xl">
@@ -59,7 +59,7 @@ function Home() {
             </section>
 
             {/* Categories Section */}
-            <section className="py-12 bg-white">
+            <section className="py-12 bg-gray-50">
                 <Container>
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Shop by Category</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -67,9 +67,9 @@ function Home() {
                             <Link
                                 key={category.value}
                                 to={`/products?category=${category.value}`}
-                                className="bg-gray-50 border border-gray-200 rounded-lg p-8 hover:border-blue-600 hover:bg-blue-50 transition-all text-center"
+                                className="bg-white border border-gray-200 rounded-lg p-8 hover:border-blue-600 hover:shadow-md transition-all text-center group"
                             >
-                                <h3 className="text-lg font-semibold text-gray-900">
+                                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                                     {category.name}
                                 </h3>
                             </Link>
@@ -79,7 +79,7 @@ function Home() {
             </section>
 
             {/* Featured Products Section */}
-            <section className="py-12 bg-gray-50">
+            <section className="py-12 bg-white border-t">
                 <Container>
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
@@ -95,7 +95,12 @@ function Home() {
                             <Loader />
                         </div>
                     ) : products.length === 0 ? (
-                        <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
+                        <div className="text-center py-16 bg-gray-50 rounded-lg border border-gray-200">
+                            <div className="text-gray-400 mb-3">
+                                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                            </div>
                             <p className="text-lg text-gray-600 mb-2">No products available yet</p>
                             <p className="text-sm text-gray-500">Check back soon for new arrivals</p>
                         </div>
@@ -111,7 +116,7 @@ function Home() {
 
             {/* CTA Section */}
             {!isAuthenticated && (
-                <section className="py-16 bg-white border-t">
+                <section className="py-16 bg-gray-50 border-t">
                     <Container>
                         <div className="max-w-2xl mx-auto text-center">
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">

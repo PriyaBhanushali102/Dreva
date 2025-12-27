@@ -133,7 +133,7 @@ function Profile() {
                                         label="Email Address"
                                         name="email"
                                         value={formData.email}
-                                        disabled
+                                        onChange={handleChange}
                                         placeholder="your@email.com"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
@@ -157,13 +157,12 @@ function Profile() {
                                         email: user?.email || "",
                                         phone: user?.phone || "",
                                     })}
-                                    className="border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                                    className="border border-gray-300 text-white bg-gray-700 hover:bg-gray-50"
                                 >
                                     Cancel
                                 </Button>
                                 <Button 
                                     onClick={handleUpdate}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white"
                                 >
                                     Save Changes
                                 </Button>
