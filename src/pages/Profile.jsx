@@ -9,12 +9,13 @@ import { useState, useEffect } from "react";
 function Profile() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user } = useSelector((state) => state.auth);
+    const { user, isVendor } = useSelector((state) => state.auth);
 
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
+        description: "",
     })
 
     useEffect(() => {
@@ -23,6 +24,7 @@ function Profile() {
                 name: user.name || "",
                 email: user.email || "",
                 phone: user.phone || "",
+                description: user.description || "",
             })
         }
     }, [user])
@@ -39,6 +41,7 @@ function Profile() {
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
+                ...(isVendor && { description: formData.description })
             }
             dispatch(updateProfile(updatedUser));
             toast.success("Profile updated successfully");
@@ -133,7 +136,6 @@ function Profile() {
                                         label="Email Address"
                                         name="email"
                                         value={formData.email}
-                                        onChange={handleChange}
                                         placeholder="your@email.com"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
@@ -148,6 +150,26 @@ function Profile() {
                                         placeholder="+91 XXXXX XXXXX"
                                     />
                                 </div>
+
+
+                                {isVendor && (
+                                <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Store Description
+                                </label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    rows="4"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none transition"
+                                    placeholder="Tell customers about your store..."
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                    This will be visible on your product pages.
+                                </p>
+                                </div>
+                                )}
                             </div>
 
                             <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">

@@ -1,12 +1,12 @@
-import { Container, CartItem, CartSummary, Button } from "../components/index";
+import { Container, CartItem, CartSummary, Button, Loader } from "../components/index";
 import { useCart } from "../hooks/useCart";
 import { useNavigate } from "react-router-dom";
 
 function Cart() {
-    const { items, total, updateQuantity, removeFromCart } = useCart();
+    const { items, total, updateQuantity, removeFromCart, isLoading, isEmpty} = useCart();
     const navigate = useNavigate();
 
-    const isEmpty = items.length === 0;
+    if(isLoading && items.length === 0) return <Loader/>;
 
     const groupedItems = [];
     items.forEach((item) => {
@@ -20,7 +20,8 @@ function Cart() {
     });
 
     return (
-        <Container>
+        <Container className="pt-4 md:px-0 py-0">
+            <h1 className="text-2xl font-bold mb-6 pt-4">Shopping Cart</h1> 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> 
                 <div className={isEmpty ? "lg:col-span-3" : "lg:col-span-2"}>
                     {isEmpty ? (

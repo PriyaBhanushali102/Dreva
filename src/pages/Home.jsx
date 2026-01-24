@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Container, ProductCard, Button, Loader } from "../components/index";
-import { FaArrowRight, FaHome, FaTshirt, FaPuzzlePiece, FaMobileAlt } from "react-icons/fa";
+import { Container, ProductCard, Button, Loader, Input } from "../components/index";
+import { FaArrowRight, FaSearch } from "react-icons/fa";
 import { useProducts } from "../hooks/useProducts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Home() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const isAuthenticated = !!user;
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     q: "",
     category: "",
@@ -19,47 +22,72 @@ function Home() {
   const { products, loading } = useProducts(filters);
 
   const categories = [
-    { name: "Home", value: "home", icon: <FaHome className="text-blue-600 text-4xl mb-3 mx-auto" /> },
-    { name: "Fashion", value: "fashion", icon: <FaTshirt className="text-blue-600 text-4xl mb-3 mx-auto" /> },
-    { name: "Toys", value: "toys", icon: <FaPuzzlePiece className="text-blue-600 text-4xl mb-3 mx-auto" /> },
-    { name: "Gadgets", value: "gadgets", icon: <FaMobileAlt className="text-blue-600 text-4xl mb-3 mx-auto" /> },
+    { name: "Home & Living", value: "Home & Living", img: "/images/home.jpg"},
+    { name: "Fashion", value: "Fashion", img: "/images/fashion1.jpg" },
+    { name: "Beauty", value: "Beauty", img: "/images/beauty.jpg"},
+    { name: "Accessories", value: "Accessories", img: "/images/accessories.jpg"},
   ];
 
+  const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/products?q=${searchQuery}`);
+        }
+  };
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gray-50 border-b">
-        <Container>
-          <div className="py-16 md:py-20 text-center max-w-3xl mx-auto">
+      <section className="relative overflow-hidden border-b">
+          <Container>
+          <div className="relative z-10 py-16 md:py-20 text-center max-w-3xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-extrabold text-blue-800 mb-4">
               Dreva
             </h1>
             <span className="block text-gray-900 text-3xl md:text-4xl font-semibold mb-4">
-              Quality products, great prices
+              Quality products, Great prices
             </span>
             <p className="text-gray-700 text-lg md:text-xl mb-8">
               Browse our carefully selected collection for your everyday needs
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/products">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold rounded-lg transition-transform hover:scale-105 shadow-md">
+                <button className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 font-semibold rounded-lg transition-transform hover:scale-105 shadow-md">
                   Shop Now
-                </Button>
+                </button>
               </Link>
               {!isAuthenticated && (
                 <Link to="/register">
-                  <Button className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 font-semibold rounded-lg transition-transform hover:scale-105 shadow-md">
+                  <Button className="text-gray-700 px-8 py-3 transition-transform hover:scale-105 shadow-md">
                     Sign Up
                   </Button>
                 </Link>
               )}
             </div>
           </div>
+
+          <div className="md:hidden pb-4">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative w-3/4 max-w-x mx-auto">
+                  <Input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search Products..."
+                    className="w-full pl-4 pr-12 py-2 bg-gray-700 rounded-full border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-600 outline-none"
+                  />
+                <Button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <FaSearch/>
+                </Button>
+              </div>
+            </form>
+          </div>
         </Container>
+        
       </section>
 
       {/* Categories Section */}
       <section className="py-12 bg-gray-50">
+        
         <Container>
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center md:text-left">
             Shop by Category
@@ -69,12 +97,20 @@ function Home() {
               <Link
                 key={category.value}
                 to={`/products?category=${category.value}`}
-                className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-600 hover:shadow-lg transition-all text-center group"
+                className="group bg-white rounded-xl shadow-sm border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
               >
-                {category.icon}
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                  {category.name}
-                </h3>
+                <div className="h-56 w-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  <img
+                    src={category.img}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="font-semibold text-gray-800">
+                    {category.name}
+                  </h3>
+                </div>
               </Link>
             ))}
           </div>

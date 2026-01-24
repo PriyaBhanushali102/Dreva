@@ -35,7 +35,7 @@ function VendorOrders() {
         }
     };
 
-    const filteredOrders = filter === "all" ? orders : orders.filter(o => o.status.toLowerCase() === filter);
+    const filteredOrders = filter === "All" ? orders : orders.filter(o => o.status.toLowerCase() === filter);
 
     if (loading) return <Loader />
     
@@ -48,7 +48,7 @@ function VendorOrders() {
 
                 {/* Filter Tabs */}
                 <div className="flex gap-2 mb-6 border-b">
-                    {["all", "Processing", "Shipped", "Delivered"].map((status) => (
+                    {["All", "Processing", "Shipped", "Delivered"].map((status) => (
                         <button
                             key={status}
                             onClick={() => setFilter(status)}

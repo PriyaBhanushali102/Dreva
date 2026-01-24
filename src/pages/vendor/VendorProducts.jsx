@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import * as productService from "../../services/productService";
 import * as authService from "../../services/authService";
 import toast from "react-hot-toast";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 function VendorProducts() {
     const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ function VendorProducts() {
 
                 {products.length === 0 ? (
                     <div className="text-center py-12 bg-white rounded-lg shadow">
-                        <p className="text-gray-600 mt-4">
+                        <p className="text-gray-600 mt-4 mb-2">
                             You haven't added any products yet
                         </p>
                         <Link to="/vendor/products/add">
@@ -76,27 +76,9 @@ function VendorProducts() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {products.map((product) => (
                                     <div key={product._id} className="bg-white rounded-lg shadow hover:shadpw-lg transition overflow-hidden">
-                                        <img
-                                            src={product.images?.[0]?.url || "/placeholder.jpg"}
-                                            alt={product.name}
-                                            className="w-full h-48 object-cover"
-                                        />
                                         <div className="p-4">
-                                            <ProductCard key={product?._id} product={product} />
-                                            <div className="flex gap-2">
-                                            <Link to={`/vendor/products/${product._id}`} className="flex-1">
-                                                <Button className="w-full flex items-center justify-center gap-2">
-                                                    <FaEdit /> Edit
-                                                </Button>
-                                            </Link>
-                                            <Button 
-                                                variant="danger"
-                                                onClick={() => handleDelete(product._id)}
-                                                className="px-4"
-                                            >
-                                                <FaTrash />
-                                            </Button>
-                                            </div>
+                                            <ProductCard key={product?._id} product={product} onDelete={handleDelete}/>
+                                            
                                         </div>
                                     </div>
                                 ))}

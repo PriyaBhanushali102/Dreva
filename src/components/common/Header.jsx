@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import * as authService from "../../services/authService";
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import {Input, Logo, Container, Button} from "../index"
 
@@ -13,6 +13,19 @@ function Header() {
     const { user, isVendor } = useSelector((state) => state.auth);
     const { itemCount } = useSelector((state) => state.cart);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    // close if you click anywhere outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -40,37 +53,37 @@ function Header() {
     return (
         <header className="sticky top-0 z-50 bg-gray-900 border-b border-gray-700">
             <Container>
-                <div className="mx-auto px-6">
 
-                    <div className="flex items-center justify-between py-4">
+                    <div className="flex items-center justify-between py-4 gap-4">
                         {/* Logo */}
-                        <div className="h-10 w-10 flex items-center">
-                            <Logo width="100px"/>
-                        </div>
+                        <div className="w-10 h-10 flex-shrink-0">
+                            <Link to="/" className="flex item-center">
+                                <Logo width="100px"/>
+                            </Link>
+                       </div>
 
                         {/* Search Bar */}
                         <form
                             onSubmit={handleSearch}
-                            className="hidden md:flex flex-1 max-w-md mx-8">
+                            className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-10">
                             <div className="relative w-full">
                                 <Input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search Products..."
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-black-200 placeholder-gray-400 focus:outline-none"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none"
                                 />
                                 <Button
                                     type="submit"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"
-                                >
+                                    className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"                                >
                                     <FaSearch/>
                                 </Button>
                             </div>
                         </form>
 
                         {/* Navigation */}
-                        <nav className="flex items-center gap-6 text-sm font-medium">
+                        <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">
                             <Link
                                 to="/"
                                 className="text-gray-300 hover:text-white transition">
@@ -116,24 +129,45 @@ function Header() {
                                     )}
 
                                     {/* User Menu */}
-                                    <div className="relative group">
-                                        <div className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer">
-                                            <FaUser  className="text-xl"/>
+                                    <div className="relative" ref={menuRef}>
+                                        <div onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer select-none">
+                                            {user?.image ? (
+                                            <img
+                                                src={user.image}
+                                                alt={user.name}
+                                                className="w-10 h-10 rounded-full object-cover border border-gray-600"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.nextSibling.style.display = 'block';
+                                                }}
+                                            />
+                                            ) : null}
+                                                                                  
+                                            {!user?.image && <FaUser className="text-xl"/>}     
                                             <span className="hidden md:block">{user.name}</span>
+                                        
+                                            <span className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`}>
+                                                ▾
+                                            </span>
                                         </div>
-                                        <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-2 opacity-0 group-hover:opacity-100 pointer-events-auto transition-opacity duration-200 z-50">
-                                            <Link to="/profile" className="block">
-                                                <Button className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition block">
-                                                    Profile
-                                                </Button>
-                                            </Link>
+                                    
+                                    {isMenuOpen && (<div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-2 z-50">
+                                        <Link to="/profile" className="block" onClick={() => setIsMenuOpen(false)}>
+                                            <button className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                                                Profile
+                                            </button>
+                                        </Link>
 
-                                            <Button
-                                                onClick={handleLogout}
-                                                className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition block">
-                                                Logout
-                                            </Button>
-                                        </div>
+                                        <button
+                                            onClick={() =>{
+                                                setIsMenuOpen(false);
+                                                handleLogout();
+                                            }}
+                                            className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition block">
+                                            Logout
+                                        </button>
+                                    </div>
+                                    )}
                                     </div>
                                 </>
                             ) : (
@@ -155,7 +189,6 @@ function Header() {
                                     </>
                             )}
                         </nav>
-                    </div>
                 </div>
             </Container>
         </header>

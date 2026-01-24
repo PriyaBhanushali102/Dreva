@@ -4,6 +4,8 @@ import { Select, Button, Input} from "../index.js";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth.js";
 import axios from "axios";
+import { FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 function ProductForm({ initialData, onSuccess, onCancel }) {
   const { isVendor, isAuthenticated } = useAuth();
 
@@ -12,7 +14,7 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
     name: "",
     brand: "",
     description: "",
-    category: "",
+    category: "Home & Living",
     quantity: 0,
     price: 0,
     delivery: "",
@@ -252,7 +254,7 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
                   onClick={() => removeExistingImage(index)}
                   className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full"
                 >
-                  ✕
+                 <FaTimes size={12}/> 
                 </button>
               </div>
             ))}
@@ -291,7 +293,7 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
                   onClick={() => removeNewImage(index)}
                   className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full"
                 >
-                  ✕
+                  <FaTimes size={12}/>
                 </button>
               </div>
             ))}
@@ -318,7 +320,7 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
           >
             Cancel
           </Button>
-        )}
+          )}
       </div>
     </form>
   );

@@ -2,13 +2,16 @@ import { Button, Container, Input, Loader, Select } from "../components";
 import { useState } from "react";
 import * as orderService from "../services/orderService"
 import toast from "react-hot-toast";
-import {PAYMENT_METHODS} from "../utils/constants"
+import {PAYMENT_METHODS, TAX_RATE} from "../utils/constants"
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 
 function Checkout() {
     const navigate = useNavigate();
     const { items, total, isLoading: cartLoading } = useCart();
+
+    const taxAmount = total * TAX_RATE;
+    const grandTotal = total + taxAmount;
 
     const [formData, setFormData] = useState({
         name: "",
@@ -48,7 +51,8 @@ function Checkout() {
             const response = await orderService.createOrder({
                 ...formData,
                 items,
-                total,
+                total: grandTotal,
+                tax: taxAmount,
             })
             toast.success("Order placed succcessfully!");
             navigate(`/order-confirmation/${response.data.orderId}`);
@@ -80,8 +84,8 @@ function Checkout() {
         )
     }
     return (
-        <Container>
-            <div>                          
+        <Container >
+            <div className="pt-4">                          
                 <h1 className="text-3xl font-semibold mb-6">
                 Checkout
                 </h1>
@@ -213,12 +217,16 @@ function Checkout() {
                                     <span>₹{total.toLocaleString('en-IN')}</span>
                                 </div>
                                 <div className="flex justify-between">
+                                    <span className="text-gray-600">GST (18%)</span>
+                                    <span>₹{taxAmount.toLocaleString('en-IN')}</span>
+                                </div>
+                                <div className="flex justify-between">
                                     <span>Shipping</span>
                                     <span className="text-green-600">Free</span>
                                 </div>
                                 <div className="flex justify-between text-lg font-bold border-t pt-2">
-                                    <span>Total</span>
-                                    <span>₹{total.toLocaleString('en-IN')}</span>
+                                    <span>Total Amount</span>
+                                    <span>₹{grandTotal.toLocaleString('en-IN')}</span>
                                 </div>
                             </div>
 

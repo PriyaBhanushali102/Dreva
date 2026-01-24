@@ -28,9 +28,9 @@ function ProductDetailPage() {
             const res = await createReview(prodId, { rating, comment, images });
              console.log("REVIEW RESPONSE:", res.data); // 🧪 debug
 
-     if (!res.data?.review) {
-      throw new Error("Review not returned from backend");
-    }
+            if (!res.data?.review) {
+                throw new Error("Review not returned from backend");
+            }
             setReviews((prev) => [res.data.reviews, ...prev]);
             toast.success("Review submitted successfully")
         } catch {

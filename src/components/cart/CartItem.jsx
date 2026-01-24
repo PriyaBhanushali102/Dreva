@@ -15,19 +15,22 @@ function CartItem({ item }) {
     }
 
     return (
-        <div className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-md border border-gray-200">
+        <div className="flex items-center gap-4 bg-white p-4 mb-4 rounded-lg shadow-md border border-gray-200">
+            {/* Product Img */}
             <img
                 src={item.image || "/placeholder.jpg"}
                 alt={item.name}
                 className="w-20 h-20 object-cover rounded border border-gray-200"
             />
 
+            {/* Product Info */}
             <div className="flex-1">
-                <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
+                <h3 className="font-semibold text-lg text-gray-800 truncate">{item.name}</h3>
                 <p className="text-gray-600 font-medium">₹{item.price?.toLocaleString()}</p>
             </div>
 
-            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+            {/* Quantity Control  */}
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1 ">
                 <Button
                     onClick={() => handleUpdateQuantity(item.quantity - 1)}
                     disabled={isLoading}
@@ -57,6 +60,7 @@ function CartItem({ item }) {
                 onClick={handleRemove}
                 disabled={isLoading}
                 className="p-3 text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50"
+                aria-label="Remove item"
             >
                 <FaTrash />
             </Button>

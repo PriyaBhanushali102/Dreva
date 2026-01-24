@@ -1,9 +1,9 @@
 // Product Categories
 export const CATEGORIES = [
-  { value: "Home", label: "Home" },
+  { value: "Home & Living", label: "Home & Living" },
   { value: "Fashion", label: "Fashion" },
-  { value: "Toys", label: "Toys" },
-  { value: "Gadgets", label: "Gadgets" },
+  { value: "Beauty", label: "Beauty" },
+  { value: "Accessories", label: "Accessories" },
 ];
 
 // Payment Methods

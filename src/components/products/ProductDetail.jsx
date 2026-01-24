@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaStar, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../hooks/useCart";

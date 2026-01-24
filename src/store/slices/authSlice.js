@@ -4,6 +4,7 @@ const initialState = {
   user: null,
   token: null,
   isVendor: false,
+  isAuthenticated: false,
   isLoading: false,
   error: null,
 };
@@ -16,6 +17,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isVendor = action.payload.isVendor;
+      state.isAuthenticated = !!action.payload.token;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -30,6 +32,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isVendor = action.payload.isVendor || false;
+      state.isAuthenticated = true;
       state.isLoading = false;
       state.error = null;
       localStorage.setItem("token", action.payload.token);
@@ -39,6 +42,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isVendor = action.payload.isVendor || false;
+      state.isAuthenticated = true;
       state.isLoading = false;
       state.error = null;
       localStorage.setItem("token", action.payload.token);
@@ -48,6 +52,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isVendor = false;
+      state.isAuthenticated = false;
       state.error = null;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
