@@ -71,7 +71,6 @@ const productSchema = new Schema(
 
 productSchema.pre("findOneAndDelete", async function (next) {
   try {
-    console.log("PRE middleware triggered");
     const productId = await this.getQuery()._id;
 
     await mongoose.model("Review").deleteMany({ product: productId });

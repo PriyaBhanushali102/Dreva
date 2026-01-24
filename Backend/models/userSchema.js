@@ -23,10 +23,8 @@ const userSchema = new Schema(
       required: true,
     },
     image: {
-      // type: Buffer,
       url: String,
       filename: String,
-      // contentType: String,
     },
     addresses: [
       {
@@ -78,7 +76,7 @@ const userSchema = new Schema(
       default: null,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.pre("findOneAndDelete", async function (next) {
