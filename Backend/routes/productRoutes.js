@@ -1,5 +1,4 @@
 import express from "express";
-//import productController from "../controllers/productController";
 import {
   addProduct,
   getAllProducts,

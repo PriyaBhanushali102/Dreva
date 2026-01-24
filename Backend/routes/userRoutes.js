@@ -1,5 +1,4 @@
 import express from "express";
-//import userController from "../controllers/userController";
 import {
   register,
   loginUser,
@@ -10,9 +9,6 @@ import {
   updateUser,
   updateCartItem,
   removeCartItem,
-  addToWishList,
-  removeFromWishList,
-  getWishList,
 } from "../controllers/userController.js";
 import { userProtect } from "../middlewares/userProtect.js";
 import { optionalAuth } from "../middlewares/optionalAuth.js";
@@ -33,12 +29,5 @@ router.get("/cart", optionalAuth, getCart);
 router.post("/cart/:prodId", userProtect, addToCart);
 router.put("/cart/:prodId", userProtect, updateCartItem);
 router.delete("/cart/:prodId", userProtect, removeCartItem);
-
-// Wishlist routes
-router.get("/wishlist", userProtect, getWishList);
-router.post("/wishlist/:prodId", userProtect, addToWishList);
-router.delete("/wishlist/:prodId", userProtect, removeFromWishList);
-
-// ADD ADDRESS ROUTE LATER
 
 export default router;

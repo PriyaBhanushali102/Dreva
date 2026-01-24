@@ -14,7 +14,7 @@ router.post(
   "/new/:prodId",
   userProtect,
   upload.array("images", 5),
-  createReview
+  createReview,
 );
 
 //get all reviews by productId
