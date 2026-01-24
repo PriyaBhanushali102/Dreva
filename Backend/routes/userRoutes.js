@@ -15,6 +15,7 @@ import {
   getWishList,
 } from "../controllers/userController.js";
 import { userProtect } from "../middlewares/userProtect.js";
+import { optionalAuth } from "../middlewares/optionalAuth.js";
 import { upload } from "../config/multer.js";
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.get("/profile", userProtect, getUserProfile);
 router.put("/:userId", upload.single("image"), userProtect, updateUser);
 
 // Cart routes
-router.get("/cart", userProtect, getCart);
+router.get("/cart", optionalAuth, getCart);
 router.post("/cart/:prodId", userProtect, addToCart);
 router.put("/cart/:prodId", userProtect, updateCartItem);
 router.delete("/cart/:prodId", userProtect, removeCartItem);

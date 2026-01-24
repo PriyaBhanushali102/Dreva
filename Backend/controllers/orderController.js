@@ -30,7 +30,7 @@ export const createOrder = wrapAsync(async (req, res) => {
   const decoded = jwt.verify(token, key);
 
   const user = await User.findOne({ email: decoded.email }).populate(
-    "cart.product"
+    "cart.product",
   );
   if (!user) {
     throw new AppError("User not found.", 404);
@@ -120,7 +120,7 @@ export const createOrder = wrapAsync(async (req, res) => {
             createdAt: Date.now(),
           },
         ],
-        { session }
+        { session },
       );
       createdOrders.push(order[0]);
       user.orderHistory.push(order[0]._id);
@@ -136,7 +136,7 @@ export const createOrder = wrapAsync(async (req, res) => {
     const totalQuantity = createdOrders.reduce(
       (acc, order) =>
         acc + order.items.reduce((sum, item) => sum + item.quantity, 0),
-      0
+      0,
     );
 
     res.status(201).json({
@@ -201,7 +201,11 @@ export const getUserOrders = wrapAsync(async (req, res) => {
   ]);
 
   if (!orders || orders.length === 0) {
-    throw new AppError("Order not found.", 404);
+    return res.status(200).json({
+      success: true,
+      data: [],
+      pagination: { total: 0, page, pages: 0, limit },
+    });
   }
 
   res.status(200).json({
@@ -269,7 +273,7 @@ export const getVendorOrders = wrapAsync(async (req, res) => {
 
   const vendorOrders = orders.map((order) => {
     const vendorItems = order.items.filter(
-      (item) => item.vendor.toString() === vendor._id.toString()
+      (item) => item.vendor.toString() === vendor._id.toString(),
     );
 
     return {
@@ -308,7 +312,7 @@ export const updateOrderStatus = wrapAsync(async (req, res) => {
 
   // Check if vendor owns this order
   const hasVendorItems = order.items.some(
-    (item) => item.vendor.toString() === req.vendor._id.toString()
+    (item) => item.vendor.toString() === req.vendor._id.toString(),
   );
 
   if (!hasVendorItems) {
@@ -343,14 +347,14 @@ export const deleteOrder = wrapAsync(async (req, res) => {
   if (order.status !== "Processing") {
     throw new AppError(
       "Cannot cancel order that is already shipped or delivered.",
-      400
+      400,
     );
   }
 
   const deleteOrder = await Order.findByIdAndUpdate(
     id,
     { isActive: false, deletedAt: Date.now() },
-    { new: true }
+    { new: true },
   );
 
   res.status(200).json({

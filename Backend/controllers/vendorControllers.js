@@ -45,9 +45,13 @@ export const registerVendor = wrapAsync(async (req, res) => {
   const newVendor = await Vendor.create(vendor);
 
   //generate jwt token
-  const token = jwt.sign({ email: newVendor.email, isUser: true }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRATION,
-  });
+  const token = jwt.sign(
+    { email: newVendor.email, isVendor: true },
+    JWT_SECRET,
+    {
+      expiresIn: JWT_EXPIRATION,
+    },
+  );
 
   //store token in cookie
   res.cookie("token", token, {
@@ -88,7 +92,7 @@ export const loginVendor = wrapAsync(async (req, res) => {
   }
 
   //generate jwt token
-  const token = jwt.sign({ email: vendor.email, isUser: true }, JWT_SECRET, {
+  const token = jwt.sign({ email: vendor.email, isVendor: true }, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION,
   });
 

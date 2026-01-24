@@ -18,7 +18,9 @@ export const productValidatorSchema = Joi.object({
       "string.min": "Description is too short.",
     })
     .optional(),
-  category: Joi.string().valid("Home", "Fashion", "Toys", "Gadgets"),
+  category: Joi.string()
+    .valid("Home & Living", "Fashion", "Beauty", "Accessories")
+    .default("Home & Living"),
   quantity: Joi.number().integer().min(0).required().default(0),
   price: Joi.number().integer().min(0).required().default(0),
   vendorName: Joi.string()

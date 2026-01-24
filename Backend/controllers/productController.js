@@ -31,33 +31,38 @@ export const addProduct = wrapAsync(async (req, res) => {
     throw new AppError("Product data is required.", 400);
   }
 
-  const findVendor = req.vendor;
+  const vendorId = req.vendor?._id || req.user?._id;
 
-  if (!findVendor) {
+  if (!vendorId) {
     throw new AppError("Vendor not found.", 404);
+  }
+
+  const vendorDoc = await Vendor.findById(vendorId);
+  if (!vendorDoc) {
+    throw new AppError("Vendor account not found", 404);
   }
 
   const newProduct = new Product({
     ...product,
-    vendor: req.vendor._id,
+    vendor: vendorId,
   });
 
   // Add image from cloudinary
   if (req.files && req.files.length > 0) {
-    req.files.forEach((file) => {
-      newProduct.images.push({
-        url: file.path,
-        filename: file.filename,
-      });
-    });
+    newProduct.images = req.files.map((file) => ({
+      url: file.path,
+      filename: file.filename,
+    }));
   }
-  await newProduct.save();
+  console.log(newProduct);
 
-  findVendor.productList.push(newProduct._id);
-  newProduct.vendor = findVendor._id;
-
-  await findVendor.save();
-  res.status(201).json({ success: "true", data: newProduct });
+  vendorDoc.productList.push(newProduct._id);
+  await Promise.all([newProduct.save(), vendorDoc.save()]);
+  res.status(201).json({
+    success: "true",
+    data: newProduct,
+    message: "Product added successfully",
+  });
 });
 
 //get all product
@@ -114,56 +119,24 @@ export const getProductById = wrapAsync(async (req, res) => {
   });
 });
 
-//get product by category
-export const getProductsByCategory = wrapAsync(async (req, res) => {
-  const { category } = req.params;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  const skip = (page - 1) * limit;
-
-  const [products, total] = await Promise.all([
-    Product.find({ category: category, isActive: true })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit),
-    Product.countDocuments({ category: category, isActive: true }),
-  ]);
-
-  if (!products || products.length === 0) {
-    throw new AppError("Products not found.", 404);
-  }
-
-  res.status(200).json({
-    success: true,
-    data: products,
-    pagination: {
-      total,
-      page,
-      pages: Math.ceil(total / limit),
-      limit,
-    },
-  });
-});
-
 // Search product and pagination
 export const searchProducts = wrapAsync(async (req, res) => {
-  const { q, category, minPrice, maxPrice, page = 1, limit = 12 } = req.query;
+  const {
+    category,
+    search,
+    sort,
+    minPrice,
+    maxPrice,
+    page = 1,
+    limit = 12,
+  } = req.query;
+  const skip = (page - 1) * limit;
 
   const query = { isActive: true };
 
-  // Text search
-  if (q) {
-    query.$or = [
-      { name: { $regex: q, $options: "i" } },
-      { brand: { $regex: q, $options: "i" } },
-      { description: { $regex: q, $options: "i" } },
-    ];
-  }
-
   // Category filter
-  if (category) {
-    query.category = category;
-  }
+  if (category) query.category = category;
+  if (search) query.name = { $regex: search, $options: "i" };
 
   // Price range
   if (minPrice || maxPrice) {
@@ -172,14 +145,12 @@ export const searchProducts = wrapAsync(async (req, res) => {
     if (maxPrice) query.price.$lte = Number(maxPrice);
   }
 
-  const skip = (page - 1) * limit;
-
   const [products, total] = await Promise.all([
     Product.find(query)
       .skip(skip)
       .limit(Number(limit))
       .populate("vendor", "name email")
-      .sort({ createdAt: -1 }),
+      .sort(sort === "price-asc" ? { price: 1 } : { createdAt: -1 }),
     Product.countDocuments(query),
   ]);
 
@@ -190,6 +161,7 @@ export const searchProducts = wrapAsync(async (req, res) => {
       total,
       page: Number(page),
       pages: Math.ceil(total / limit),
+      limit: Number(limit),
     },
   });
 });
@@ -225,7 +197,9 @@ export const updateProduct = wrapAsync(async (req, res) => {
     ? JSON.parse(req.body.existingImages)
     : [];
   const uniqueImages = Array.from(
-    new Map(existingImages.map((img) => [img.url + img.filename, img])).values()
+    new Map(
+      existingImages.map((img) => [img.url + img.filename, img]),
+    ).values(),
   );
   product.images = uniqueImages;
 
@@ -237,7 +211,7 @@ export const updateProduct = wrapAsync(async (req, res) => {
         filename: file.filename,
       };
       const exists = product.images.some(
-        (img) => img.url === newImage.url && img.filename === newImage.filename
+        (img) => img.url === newImage.url && img.filename === newImage.filename,
       );
       if (!exists) product.images.push(newImage);
     });

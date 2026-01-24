@@ -29,7 +29,8 @@ const productSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["Home", "Fashion", "Toys", "Gadgets"],
+      enum: ["Home & Living", "Fashion", "Beauty", "Accessories"],
+      default: "Home & Living",
     },
     quantity: {
       type: Number,
@@ -65,7 +66,7 @@ const productSchema = new Schema(
     isActive: { type: Boolean, default: true },
     deletedAt: { type: Date, default: null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 productSchema.pre("findOneAndDelete", async function (next) {

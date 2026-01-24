@@ -4,7 +4,6 @@ import {
   addProduct,
   getAllProducts,
   getProductById,
-  getProductsByCategory,
   searchProducts,
   updateProduct,
   deleteProduct,
@@ -16,7 +15,7 @@ const router = express.Router();
 
 const inCategory = (req, res, next) => {
   let { category } = req.params;
-  let validCategory = ["Home", "Fashion", "Toys", "Gadgets"];
+  let validCategory = ["Home & Living", "Fashion", "Beauty", "Accessories"];
 
   if (validCategory.includes(category)) {
     return next();
@@ -29,9 +28,6 @@ const inCategory = (req, res, next) => {
 
 //add product by vendor
 router.post("/create", upload.array("images", 5), vendorProtect, addProduct);
-
-//get product by category
-router.get("/category/:category", inCategory, getProductsByCategory);
 
 // Search product and pagination
 router.get("/search", searchProducts);

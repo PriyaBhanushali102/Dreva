@@ -14,10 +14,6 @@ export const userValidatorSchema = Joi.object({
     "any.required": "Password is required.",
   }),
   image: Joi.any().optional(),
-  // object({
-  //   url: Joi.string().uri(),
-  //   filename: Joi.string(),
-  // }).required(),
   addresses: Joi.array()
     .items(
       Joi.object({
@@ -26,7 +22,7 @@ export const userValidatorSchema = Joi.object({
         state: Joi.string(),
         zip: Joi.string(),
         country: Joi.string(),
-      })
+      }),
     )
     .optional(),
   cart: Joi.array().items(Joi.string().hex().length(24)).optional(),
