@@ -9,7 +9,7 @@ function CartSummary() {
     const { total, itemCount } = getCartSummary();
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md sticky top-20 border border-gray-200">
+        <div className="bg-white p-6 rounded-lg shadow-md top-20 border border-gray-200">
             <h3 className="ext-xl font-bold mb-6 text-gray-800 uppercase tracking-wider">
                 Cart Summary
             </h3>

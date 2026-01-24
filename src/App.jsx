@@ -1,5 +1,5 @@
 import './App.css'
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { hydrateAuth } from "./store/slices/authSlice.js";
@@ -7,6 +7,11 @@ import { Toaster } from 'react-hot-toast';
 import { Header, Footer } from "./components/index.js"
 function App() {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => { 
     const token = localStorage.getItem('token');

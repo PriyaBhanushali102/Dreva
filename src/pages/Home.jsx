@@ -96,7 +96,7 @@ function Home() {
             {categories.map((category) => (
               <Link
                 key={category.value}
-                to={`/products?category=${category.value}`}
+                to={`/products?category=${encodeURIComponent(category.value)}`}
                 className="group bg-white rounded-xl shadow-sm border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
               >
                 <div className="h-56 w-full object-cover group-hover:scale-105 transition-transform duration-500">

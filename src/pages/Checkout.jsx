@@ -90,9 +90,9 @@ function Checkout() {
                 Checkout
                 </h1>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                     {/* Checkout Form */}
-                    <div className="lg-col-span-2">
+                    <div className="lg:col-span-2">
                         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
                             <div className="space-y-4">
                                 <h2 className="text-xl font-semibold">Contact Information</h2>
@@ -193,11 +193,11 @@ function Checkout() {
                     </div>
 
                     {/* Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white p-6 rounded-lg shadow sticky top-4">
-                            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                    <div className="lg:col-span-1 top-24">
+                        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow top-4">
+                            <h2 className="text-xl font-semibold mb-4 text-gray-800">Order Summary</h2>
 
-                            <div className="space-y-3 mb-4">
+                            <div className="space-y-4 mb-4 max-h-[400px] overflow-y-auto pr-2">
                                 {items.map((item) => {
                                     const product = item.product;
                                     if (!product || typeof product === "string") return null;
