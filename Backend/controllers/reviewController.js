@@ -6,9 +6,6 @@ import Review from "../models/reviewSchema.js";
 import { cloudinary } from "../config/cloudinary.js";
 
 export const createReview = wrapAsync(async (req, res) => {
-  console.log("BODY:", req.body);
-  console.log("FILES:", req.files);
-
   const { prodId } = req.params;
   const { rating, comment } = req.body;
 
@@ -35,7 +32,6 @@ export const createReview = wrapAsync(async (req, res) => {
   }
 
   await newReview.save();
-  console.log("PRODUCT REVIEWS:", product.reviews);
 
   product.reviews.push(newReview._id);
   await product.save();
@@ -44,7 +40,7 @@ export const createReview = wrapAsync(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     { $push: { productReviews: newReview._id } },
-    { new: true }
+    { new: true },
   );
 
   res.status(201).json({
@@ -95,8 +91,6 @@ export const updateReview = wrapAsync(async (req, res) => {
   if (!review) {
     throw new AppError("Review not found.", 404);
   }
-  console.log("Review.user:", review.userId?.toString());
-  console.log("Req.user._id:", req.user?._id?.toString());
 
   if (
     !review.user ||

@@ -19,22 +19,14 @@ export const vendorProtect = wrapAsync(async (req, res, next) => {
     throw new AppError("Not Authorized, no token", 401);
   }
 
-  console.log("Authorization Header:", req.headers.authorization);
-
-  console.log("HEADERS: ", req.headers);
-
   const decoded = jwt.verify(token, JWT_SECRET);
-  console.log("📦 Decoded:", decoded);
   const vendor = await Vendor.findOne({ email: decoded.email }).select(
-    "-password"
+    "-password",
   );
 
   if (!vendor) {
     throw new AppError("Vendor not found", 401);
   }
   req.vendor = vendor;
-  console.log(token);
-  console.log("✅ Authenticated vendor:", req.vendor);
-
   return next();
 });

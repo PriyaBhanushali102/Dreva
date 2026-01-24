@@ -54,7 +54,6 @@ export const addProduct = wrapAsync(async (req, res) => {
       filename: file.filename,
     }));
   }
-  console.log(newProduct);
 
   vendorDoc.productList.push(newProduct._id);
   await Promise.all([newProduct.save(), vendorDoc.save()]);
@@ -181,7 +180,6 @@ export const updateProduct = wrapAsync(async (req, res) => {
 
   const product = await Product.findById(id);
 
-  console.log("✅ product routers loaded");
   if (!product) {
     throw new AppError("Product not found.", 404);
   }

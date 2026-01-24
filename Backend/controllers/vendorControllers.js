@@ -12,9 +12,6 @@ import { JWT_SECRET, JWT_EXPIRATION } from "../config/env.config.js";
 export const registerVendor = wrapAsync(async (req, res) => {
   let vendor = req.body;
 
-  console.log("📥 Incoming vendor data:", vendor);
-  console.log("📷 Uploaded file:", req.file);
-
   const { error } = vendorvalidatorSchema.validate(vendor);
   if (error) {
     const errorMessage = error.details
@@ -58,8 +55,8 @@ export const registerVendor = wrapAsync(async (req, res) => {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
   });
 
   //remove pass from response
@@ -203,7 +200,6 @@ export const updateVendor = wrapAsync(async (req, res) => {
   Object.keys(updates).forEach((key) => {
     vendor[key] = updates[key];
   });
-  console.log(vendor);
   await vendor.save();
 
   //remove password from response

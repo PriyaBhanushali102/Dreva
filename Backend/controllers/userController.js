@@ -171,7 +171,6 @@ export const updateUser = wrapAsync(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
   }
-  console.log(req.body);
   await user.save();
 
   //populated and return
@@ -196,7 +195,6 @@ export const addToCart = wrapAsync(async (req, res) => {
 
   let qty = parseInt(req.body.quantity, 10);
   if (isNaN(qty) || qty < 1) qty = 1;
-  console.log("Received quantity:", req.body.quantity);
 
   const userId = req.user?._id;
 
@@ -213,7 +211,7 @@ export const addToCart = wrapAsync(async (req, res) => {
 
     //check product already in DB cart
     const existingItem = user.cart.find(
-      (item) => item.product && item.product.toString() === prodId.toString()
+      (item) => item.product && item.product.toString() === prodId.toString(),
     );
 
     if (existingItem) {
@@ -229,7 +227,7 @@ export const addToCart = wrapAsync(async (req, res) => {
 
     const total = dbCart.reduce(
       (sum, item) => sum + item.quantity * (item.product?.price || 0),
-      0
+      0,
     );
     return res.status(200).json({
       success: true,
@@ -249,7 +247,7 @@ export const addToCart = wrapAsync(async (req, res) => {
   //check product already exsist
   const existingSessionItem = req.session.cart.find(
     (item) =>
-      item.product && prodId && item.product.toString() === prodId.toString()
+      item.product && prodId && item.product.toString() === prodId.toString(),
   );
 
   if (existingSessionItem) {
@@ -263,7 +261,7 @@ export const addToCart = wrapAsync(async (req, res) => {
 
   const total = req.session.cart.reduce(
     (sum, item) => sum + item.quantity * (product.price || 0),
-    0
+    0,
   );
 
   res.status(200).json({
@@ -410,7 +408,7 @@ export const removeCartItem = wrapAsync(async (req, res) => {
   if (!req.session.cart) req.session.cart = [];
 
   req.session.cart = req.session.cart.filter(
-    (item) => item.product && String(item.product) !== prodId.toString()
+    (item) => item.product && String(item.product) !== prodId.toString(),
   );
 
   // DB cart
@@ -422,7 +420,7 @@ export const removeCartItem = wrapAsync(async (req, res) => {
 
     user.cart = user.cart.filter(
       (item) =>
-        item.product && item.product._id.toString() !== prodId.toString()
+        item.product && item.product._id.toString() !== prodId.toString(),
     );
 
     await user.save();
@@ -433,58 +431,5 @@ export const removeCartItem = wrapAsync(async (req, res) => {
     message: "Item removed from cart",
     sessionCart: req.session.cart,
     dbCart: userId ? await User.findById(userId).populate("cart.product") : [],
-  });
-});
-
-// WsihList Routes
-
-// Add to wishlist
-export const addToWishList = wrapAsync(async (req, res) => {
-  const { prodId } = req.params;
-
-  const product = await Product.findById(prodId);
-  if (!product) {
-    throw new AppError("Product not found.", 404);
-  }
-
-  const user = await User.findById(req.user._id);
-
-  // Check if already in wishlist
-  if (user.wishlist.includes(prodId)) {
-    throw new AppError("Product already in wishlist.", 400);
-  }
-
-  user.wishlist.push(prodId);
-  await user.save();
-
-  res.status(200).json({
-    success: true,
-    message: "Product added to wishlist.",
-  });
-});
-
-// Remove from wishlist
-export const removeFromWishList = wrapAsync(async (req, res) => {
-  const { prodId } = req.params;
-
-  const user = await User.findById(req.user._id);
-  user.wishlist = user.wishlist.filter(
-    (id) => id.toString() !== prodId.toString()
-  );
-  await user.save();
-
-  res.status(200).json({
-    success: true,
-    message: "Product removed from wishlist.",
-  });
-});
-
-// Get wishlist
-export const getWishList = wrapAsync(async (req, res) => {
-  const user = await User.findById(req.user._id).populate("wishlist");
-
-  res.status(200).json({
-    success: true,
-    data: user.wishlist,
   });
 });

@@ -26,22 +26,16 @@ export const userProtect = async (req, res, next) => {
 
   // Verify and attach user
   try {
-    console.log("HEADERS: ", req.headers);
-
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findOne({ email: decoded.email }).select(
-      "-password"
+      "-password",
     );
-
-    console.log("Decoded token:", decoded);
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
 
     req.user = user;
-    console.log("req.user set to:", req.user);
-
     next();
   } catch (error) {
     console.error("JWT ERROR:", error.message);
