@@ -27,7 +27,7 @@ function LoginForm() {
         Welcome Back
       </h2>
 
-      {/* Vendor / User Toggle */}
+      {/* Vendor / User Toggle
       <div className="flex mb-6 bg-gray-100 rounded p-1 shadow-inner">
         <Button
           type="button"
@@ -52,6 +52,12 @@ function LoginForm() {
         >
           Vendor
         </Button>
+      </div> */}
+
+      <div className="relative flex w-full bg-gray-700 p-1 rounded-xl mb-8">
+        <div className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-lg shadow-sm transition-all duration-300 ${isVendorLogin ? 'translate-x-full' : 'translate-x-0'}`} />
+          <button type="button" onClick={() => setIsVendorLogin(false)} className="relative z-10 w-1/2 py-2 text-md font-semibold">User</button>
+          <button type="button" onClick={() => setIsVendorLogin(true)} className="relative z-10 w-1/2 py-2 text-md font-semibold">Vendor</button>
       </div>
 
       {error && (

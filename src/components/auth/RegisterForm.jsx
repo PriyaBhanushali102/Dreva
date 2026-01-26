@@ -40,7 +40,7 @@ function RegisterForm() {
       </h2>
 
       {/* Vendor / User Toggle */}
-      <div className="flex mb-6 bg-gray-100 rounded p-1 shadow-inner">
+      {/* <div className="flex mb-6 bg-gray-100 rounded p-1 shadow-inner">
         <Button
           type="button"
           onClick={() => setIsVendorRegister(false)}
@@ -64,6 +64,12 @@ function RegisterForm() {
         >
           Vendor
         </Button>
+      </div> */}
+
+      <div className="relative flex w-full bg-gray-700 p-1 rounded-xl mb-8">
+        <div className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-lg shadow-sm transition-all duration-300 ${isVendorRegister ? 'translate-x-full' : 'translate-x-0'}`} />
+          <button type="button" onClick={() => setIsVendorRegister(false)} className="relative z-10 w-1/2 py-2 text-md font-semibold">User</button>
+          <button type="button" onClick={() => setIsVendorRegister(true)} className="relative z-10 w-1/2 py-2 text-md font-semibold">Vendor</button>
       </div>
       
 

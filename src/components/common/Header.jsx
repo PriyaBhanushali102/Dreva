@@ -28,6 +28,7 @@ function Header() {
     }, []);
 
     const handleLogout = async () => {
+        const toastId = toast.loading('Signing out...');
         try {
             if (isVendor) {
                 await authService.logoutVendor();
@@ -36,22 +37,24 @@ function Header() {
             }
 
             dispatch(logout());
-            toast.success('Logged out successfully');
+            toast.success('Signed out successfully', { id: toastId });
             navigate('/login');
         } catch {
-            toast.error('Logout failed');
+            toast.error('Session ended locally', { id: toastId });
+            dispatch(logout()); 
+            navigate('/login');
         }
     }
     
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            navigate(`/products?q=${searchQuery}`);
+            navigate(`/products?search=${searchQuery}`);
         }
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-gray-900 border-b border-gray-700">
+        <header className="sticky top-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
             <Container>
 
                     <div className="flex items-center justify-between py-4 gap-4">

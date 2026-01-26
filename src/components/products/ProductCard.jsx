@@ -18,7 +18,7 @@ function ProductCard({ product, compact = false, onDelete}) {
               toast.error("Please login to add items to cart.")
               return;
           }
-
+          
         await addToCart(product._id, 1);
     }
     return (

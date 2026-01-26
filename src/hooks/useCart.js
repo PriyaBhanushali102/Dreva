@@ -43,6 +43,10 @@ export const useCart = () => {
   const addToCart = async (prodId, quantity = 1) => {
     try {
       dispatch(setLoading(true));
+      if (!prodId) {
+        console.error("Cannot add to cart: Product ID is undefined");
+        return;
+      }
 
       const response = await cartService.addToCart(prodId, quantity);
       const cartData = response.data?.data || response.data;
