@@ -142,7 +142,7 @@ function OrderHistory() {
                 {/* Filter Tabs */}
                 {isVendor && (
                     <div className="flex gap-2 mb-6 overflow-x-auto border-b pb-2">
-                    {["all", "Processing", "Shipped", "Delivered"].map((status) => (
+                    {["All", "Processing", "Shipped", "Delivered"].map((status) => (
                         <button
                             key={status}
                             onClick={() => setFilter(status)}
@@ -152,8 +152,8 @@ function OrderHistory() {
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                         >
-                            {status === "all" ? "All Orders" : status}
-                            {status === "all" && ` (${orders.length})`}
+                            {status === "All" ? "All Orders" : status}
+                            {status === "All" && ` (${orders.length})`}
                         </button>
                     ))}
                     </div>
@@ -167,7 +167,7 @@ function OrderHistory() {
                             No Orders Found
                         </h3>
                         <p className="text-gray-500 mb-6">
-                            {filter === "all"
+                            {filter === "All"
                                 ? "You haven't placed any orders yet"
                                 : `No ${filter} orders`}
                         </p>
