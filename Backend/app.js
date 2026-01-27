@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 
-if (process.env.NODE_ENV === "production") {
-  dotenv.config({
-    path: "config/.env",
-  });
-}
+// if (process.env.NODE_ENV === "production") {
+//   dotenv.config({
+//     path: "config/.env",
+//   });
+// }
 
 import express from "express";
 import { connectDB } from "./config/db.js";
