@@ -14,7 +14,7 @@ function Button({
     const baseClasses = 'px-6 py-2 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg'
     const variants = {
         primary: 'bg-blue-600 text-white hover:bg-blue-700',
-        secondary: 'bg-gray-700 text-white hover:bg-gray-600',
+        secondary: 'bg-slate-800 text-white hover:bg-gray-600',
         danger: 'bg-red-600 text-white hover:bg-red-700',
         outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50',
         dark: 'bg-gray-900 text-white border border-gray-700 hover:bg-gray-800',

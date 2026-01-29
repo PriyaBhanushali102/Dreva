@@ -5,14 +5,13 @@ import * as authService from "../../services/authService";
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-import {Input, Logo, Container, Button} from "../index"
+import {Input, Logo, Container, Button, SimpleSearchBar } from "../index"
 
 function Header() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user, isVendor } = useSelector((state) => state.auth);
     const { itemCount } = useSelector((state) => state.cart);
-    const [searchQuery, setSearchQuery] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -45,13 +44,6 @@ function Header() {
             navigate('/login');
         }
     }
-    
-    const handleSearch = (e) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            navigate(`/products?search=${searchQuery}`);
-        }
-    };
 
     return (
         <header className="sticky top-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
@@ -63,27 +55,12 @@ function Header() {
                             <Link to="/" className="flex item-center">
                                 <Logo width="100px"/>
                             </Link>
-                       </div>
+                        </div>
 
-                        {/* Search Bar */}
-                        <form
-                            onSubmit={handleSearch}
-                            className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-10">
-                            <div className="relative w-full">
-                                <Input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search Products..."
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none"
-                                />
-                                <Button
-                                    type="submit"
-                                    className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"                                >
-                                    <FaSearch/>
-                                </Button>
-                            </div>
-                        </form>
+                        {/* Simple Search Bar - Clean like Myntra/Amazon */}
+                        <div className="hidden md:flex flex-1 max-w-2xl mx-4">
+                            <SimpleSearchBar />
+                        </div>
 
                         {/* Navigation */}
                         <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { FaBox, FaShippingFast, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 function OrderHistory() {
-    const { user,isVendor, isAuthenticated } = useAuth();
+    const { user ,isVendor, isAuthenticated } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -102,7 +102,7 @@ function OrderHistory() {
     
     if (loading) return <Loader />
     
-     if (!isAuthenticated) {
+    if (!isAuthenticated) {
         return (
             <Container>
                 <div className="text-center py-20">
@@ -117,7 +117,7 @@ function OrderHistory() {
         );
     }
 
-     if (error) {
+    if (error) {
         return (
             <Container>
                 <div className="text-center py-20">
@@ -133,9 +133,9 @@ function OrderHistory() {
     return (
         <Container>
             <div>
-            {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mt-5 mb-2">My Orders</h1>
+                {/* Header */}
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900 mt-5 mb-2">My Orders</h1>
                     <p className="text-gray-600">Track and manage your orders</p>
                 </div>
 
@@ -159,7 +159,7 @@ function OrderHistory() {
                     </div>
                 )}
 
-                 {/* Orders List */}
+                {/* Orders List */}
                 {filteredOrders.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-lg shadow-md">
                         <FaBox className="mx-auto text-6xl text-gray-300 mb-4" />
@@ -273,12 +273,12 @@ function OrderHistory() {
                                         <div className="flex gap-3">
                                             
                                             {order.status === "Processing" && (
-                                                <Button
+                                                <button
                                                     onClick={() => handleCancelOrder(order._id)}
-                                                    className="bg-red-600 hover:bg-red-700 text-white px-6"
+                                                    className="bg-red-600 text-white px-6 py-2 rounded-lg"
                                                 >
                                                     Cancel Order
-                                                </Button>
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -290,7 +290,7 @@ function OrderHistory() {
 
                  {/* Pagination */}
                 {pagination.pages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-8">
+                    <div className="flex justify-between items-center gap-4 mt-8 p-2">
                         <Button
                             onClick={() => setPage(p => Math.max(1, p - 1))}
                             disabled={page === 1}

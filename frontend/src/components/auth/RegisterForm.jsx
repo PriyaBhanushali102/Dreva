@@ -27,147 +27,193 @@ function RegisterForm() {
       ? await registerVendor(formData)
       : await registerUser(formData);
     
-    console.log("Registration result:", result);
     if (result.success) {
       navigate(isVendorRegister ? "/vendor/dashboard" : "/");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Create Account
-      </h2>
+    <div className="flex h-screen w-screen overflow-hidden">
+      {/* LEFT SIDE: Branding - Hidden on mobile */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-slate-800 to-slate-900 p-12 flex-col justify-between overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
-      {/* Vendor / User Toggle */}
-      {/* <div className="flex mb-6 bg-gray-100 rounded p-1 shadow-inner">
-        <Button
-          type="button"
-          onClick={() => setIsVendorRegister(false)}
-          className={`flex-1 py-2 rounded transition-all duration-300  ${
-            !isVendorRegister
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
-        >
-          User
-        </Button>
-
-        <Button
-          type="button"
-          onClick={() => setIsVendorRegister(true)}
-          className={`flex-1 py-2 rounded transition-all duration-300 ${
-            isVendorRegister
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
-        >
-          Vendor
-        </Button>
-      </div> */}
-
-      <div className="relative flex w-full bg-gray-700 p-1 rounded-xl mb-8">
-        <div className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-lg shadow-sm transition-all duration-300 ${isVendorRegister ? 'translate-x-full' : 'translate-x-0'}`} />
-          <button type="button" onClick={() => setIsVendorRegister(false)} className="relative z-10 w-1/2 py-2 text-md font-semibold">User</button>
-          <button type="button" onClick={() => setIsVendorRegister(true)} className="relative z-10 w-1/2 py-2 text-md font-semibold">Vendor</button>
-      </div>
-      
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-700 rounded-md">
-          {error}
+        {/* Logo */}
+        <div className="relative z-10">
+          <h1 className="text-white text-5xl font-black tracking-tight">
+            DREVA
+          </h1>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Full Name"
-              value={formData.name}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none transition"
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}      
-              required
-            />
+        {/* Main Content */}
+        <div className="relative z-10 space-y-6">
+          <h2 className="text-white text-5xl font-bold leading-tight">
+            {isVendorRegister
+              ? "Start your business journey."
+              : "Join thousands of happy shoppers."}
+          </h2>
+          <p className="text-slate-300 text-lg max-w-md">
+            {isVendorRegister
+              ? "Create your vendor account and start selling to millions of customers today."
+              : "Create your account and discover amazing products from trusted sellers."}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="relative z-10 flex gap-8 text-slate-400 text-sm">
+          <span>✓ Verified Platform</span>
+          <span>✓ Secure Payments</span>
+        </div>
+
+        {/* Large decorative circle */}
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 border-4 border-white/5 rounded-full"></div>
+      </div>
+
+      {/* RIGHT SIDE: Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-8 overflow-y-auto">
+        <div className="w-full max-w-md space-y-6 py-8">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h1 className="text-4xl font-bold text-slate-900">
+              Create Account
+            </h1>
+            <p className="text-slate-500">
+              {isVendorRegister 
+                ? "Start your business journey today" 
+                : "Create an account to start shopping"}
+            </p>
           </div>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={formData.email}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none transition"
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-            />
-          </div>
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+              {error}
+            </div>
+          )}
 
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none transition"
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
-          </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
+                Name
+              </label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50"
+                required
+              />
+            </div>
 
-          {/* Vendor-only fields */}
-          {isVendorRegister && (
-            <>
-              {/* Description */}
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Business Description</label>
+            {/* Email */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50"
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div className="space-y-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50"
+                required
+              />
+            </div>
+
+            {/* Vendor-only fields */}
+            {isVendorRegister && (
+              <div className="space-y-2">
+                <label htmlFor="description" className="block text-sm font-semibold text-slate-700">
+                  Business Description
+                </label>
                 <textarea
                   id="description"
                   placeholder="Describe your business"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+                  rows="4"
+                  className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50 resize-none"
                   required
                 />
               </div>
-            </>
-          )}
-        
-          {/* Image Upload */}
-          <div>
-                <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
-                <input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="w-full"
-                />
+            )}
+
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <label htmlFor="image" className="block text-sm font-semibold text-slate-700">
+                Profile Image
+              </label>
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-5 py-3 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-slate-800 file:text-white hover:file:bg-slate-900 file:cursor-pointer"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-4 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-slate-900/10"
+            >
+              {isLoading 
+                ? "Creating account..." 
+                : (isVendorRegister ? "Register as Vendor" : "Register as User")}
+            </Button>
+          </form>
+
+          {/* Footer Links */}
+          <div className="space-y-4 text-center">
+            <p className="text-slate-600 text-sm">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-600 font-semibold hover:text-blue-800"
+              >
+                Login here
+              </Link>
+            </p>
+
+            <div className="pt-4 border-t border-slate-200">
+              <p className="text-slate-500 text-sm mb-2">
+                {isVendorRegister ? "Looking to shop instead?" : "Are you a business owner?"}
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsVendorRegister(!isVendorRegister)}
+                className="text-blue-600 font-black text-sm hover:text-blue-800 transition-colors uppercase tracking-wider"
+              >
+                {isVendorRegister ? "REGISTER AS USER" : "BECOME A VENDOR"}
+              </button>
+            </div>
           </div>
-        
-          {/* Submit Button */}
-          <Button type="submit" fullWidth disabled={isLoading}>
-            {isVendorRegister ? "Register as Vendor" : "Register as User"}
-          </Button>
-      </form>
-
-
-      <p className="mt-6 text-center text-gray-600">
-        Already have an account?{" "}
-        <Link
-          to="/login"
-          className="text-blue-600 hover:underline font-semibold"
-        >
-          Login here
-        </Link>
-      </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -47,7 +47,7 @@ function ProductCard({ product, compact = false, onDelete}) {
             </Link>
 
             {/* Content */}
-            <div className={`${compact ? "p-2" : "p-4"} flex-1 flex flex-col`}>
+            <div className={`${compact ? "p-1" : "p-2"} flex-1 flex flex-col`}>
                 <Link to={`/products/${product._id}`}>
                     <h3 className="font-semibold text-sm truncate hover:text-blue-600">
                         {product.name}
@@ -55,13 +55,13 @@ function ProductCard({ product, compact = false, onDelete}) {
                 </Link>
                
                 {!compact && (
-                    <p className="text-gray-600 text-sm mb-2 uppercase tracking-wide">
+                    <p className="text-gray-600 text-sm mb-1 uppercase tracking-wide">
                         {product.brand}
                     </p>
                 )}
                
                 {/* Rating */}
-                <div className="flex items-center my-2">
+                <div className="flex items-center my-1">
                    
                         {[...Array(5)].map((_, i) => (
                             <FaStar
@@ -77,7 +77,7 @@ function ProductCard({ product, compact = false, onDelete}) {
                 </div>
 
                 {/* Price */}
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between items-center mb-1">
                     <span className="text-blue-600 font-bold">
                         ₹{product.price}
                     </span>

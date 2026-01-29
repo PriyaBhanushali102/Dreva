@@ -20,9 +20,6 @@ export const ORDER_STATUS_COLORS = {
   Delivered: "bg-green-100 text-green-800 border border-green-300",
 };
 
-// Order Statuses
-export const ORDER_STATUSES = ["Processing", "Shipped", "Delivered"];
-
 // Pagination Defaults
 export const DEFAULT_PAGE_SIZE = 12;
 export const DEFAULT_PAGE = 1;

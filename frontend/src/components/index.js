@@ -8,6 +8,11 @@ import Input from "./common/Input";
 import ProtectedRoute from "./common/ProtectedRoute";
 import Select from "./common/Select";
 
+// filters
+import FilterSideBar from "./filters/FilterSideBar";
+import SimpleSearchBar from "./filters/SimpleSearchBar";
+import MobileFilterModal from "./filters/MobileFilterModal";
+
 // Product
 import ProductCard from "./products/ProductCard";
 import ProductDetail from "./products/ProductDetail";
@@ -38,6 +43,11 @@ export {
   Input,
   ProtectedRoute,
   Select,
+
+  //filters
+  FilterSideBar,
+  SimpleSearchBar,
+  MobileFilterModal,
 
   // products
   ProductCard,

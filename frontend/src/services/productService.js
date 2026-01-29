@@ -37,15 +37,18 @@ export const getProductById = async (prodId) => {
 
 export const searchProducts = async (filters = {}) => {
   const queryParams = new URLSearchParams();
-  if (filters.q) queryParams.append("q", filters.q);
+
+  const searchTerm = filters.q || filters.search;
+  if (searchTerm) queryParams.append("search", searchTerm);
+
   if (filters.category) queryParams.append("category", filters.category);
   if (filters.minPrice) queryParams.append("minPrice", filters.minPrice);
   if (filters.maxPrice) queryParams.append("maxPrice", filters.maxPrice);
   if (filters.sort) queryParams.append("sort", filters.sort);
   if (filters.page) queryParams.append("page", filters.page);
   if (filters.limit) queryParams.append("limit", filters.limit);
-
   const queryString = queryParams.toString();
+
   return await api.get(`/products/search?${queryString}`);
 };
 

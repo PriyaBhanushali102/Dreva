@@ -1,6 +1,7 @@
 import { Button, Container, Input, Loader, Select } from "../components";
 import { useState } from "react";
 import * as orderService from "../services/orderService"
+import * as paymentService from "../services/paymentService";
 import toast from "react-hot-toast";
 import {PAYMENT_METHODS, TAX_RATE} from "../utils/constants"
 import { useNavigate } from "react-router-dom";
@@ -43,20 +44,40 @@ function Checkout() {
             toast.error("Your cart is empty");
             return;
         }
+        setIsSubmitting(true);
 
         try {
-            setIsSubmitting(true);
+            // === LOGIC 1: ONLINE PAYMENT (Stripe) ===
+            if (formData.paymentMethod === "Card" || formData.paymentMethod === "UPI") {
+                
+                // fetch stripe session url form backend
+                const response = await paymentService.createCheckoutSession({
+                    ...formData, items, total: grandTotal, tax: taxAmount
+                })
 
-            // Create Order
-            const response = await orderService.createOrder({
-                ...formData,
-                items,
-                total: grandTotal,
-                tax: taxAmount,
-            })
-            toast.success("Order placed succcessfully!");
-            navigate(`/order-confirmation/${response.data.orderId}`);
-        } catch (error) {
+                if (response.data?.url) {
+                    window.location.href = response.data.url;
+                } else {
+                    toast.error("Payment Error");
+                }
+            }
+            // === LOGIC 2: CASH ON DELIVERY (COD) ===
+            else {
+           
+                // Create Order
+            
+                const response = await orderService.createOrder({
+                    ...formData,
+                    items,
+                    total: grandTotal,
+                    tax: taxAmount,
+                })
+                toast.success("Order placed succcessfully!");
+                navigate(`/order-confirmation/${response.data.orderId || response.data.data._id}`);
+            }
+        }
+        catch (error) {
+            console.error("Order Error:", error);
             toast.error(error.response?.data?.message || "Failed to place order");
         } finally {
             setIsSubmitting(false);
@@ -174,11 +195,7 @@ function Checkout() {
                                     value={formData.paymentMethod}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none transition"
                                     onChange={handleChange}
-                                    options={[
-                                        { value: "COD", label: "Cash on Delivery" },
-                                        { value: "Card", label: "Credit/Debit Card" },
-                                        { value: "UPI", label: "UPI Payment" },
-                                    ]}
+                                    options={PAYMENT_METHODS}
                                 />
                             </div>
                             
@@ -187,7 +204,9 @@ function Checkout() {
                                 className="w-full"
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? "Placing Order..." : "Place Order"}
+                                {isSubmitting 
+                                    ? "Processing..." 
+                                    : formData.paymentMethod === "COD" ? "Place COD Order" : "Proceed to Pay"}
                             </Button>
                         </form>
                     </div>
