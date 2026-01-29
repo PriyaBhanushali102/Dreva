@@ -14,7 +14,6 @@ import { vendorProtect } from "../middlewares/vendorProtect.js";
 import { upload } from "../config/multer.js";
 
 //register vendor
-console.log("✅ vendor routers loaded");
 router.post("/register", upload.single("image"), registerVendor);
 
 //login vendor

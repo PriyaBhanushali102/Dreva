@@ -101,7 +101,7 @@ export const getProductById = wrapAsync(async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid product ID" });
+    throw new AppError("Invalid product ID", 404);
   }
 
   const product = await Product.findById(id)
@@ -121,21 +121,39 @@ export const getProductById = wrapAsync(async (req, res) => {
 // Search product and pagination
 export const searchProducts = wrapAsync(async (req, res) => {
   const {
+    search = "",
     category,
-    search,
-    sort,
+    brand,
     minPrice,
     maxPrice,
+    sort = "newest",
+    order = "desc",
     page = 1,
     limit = 12,
   } = req.query;
-  const skip = (page - 1) * limit;
 
-  const query = { isActive: true };
+  const skip = (parseInt(page) - 1) * limit;
+
+  const query = { isActive: true, deletedAt: null };
+
+  if (search && search.trim() !== "") {
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+      { category: { $regex: search, $options: "i" } },
+      { brand: { $regex: search, $options: "i" } },
+    ];
+  }
 
   // Category filter
-  if (category) query.category = category;
-  if (search) query.name = { $regex: search, $options: "i" };
+  if (category && category !== "all" && category !== "") {
+    query.category = category;
+  }
+
+  // Brand filter
+  if (brand && brand !== "all" && brand !== "") {
+    query.brand = brand;
+  }
 
   // Price range
   if (minPrice || maxPrice) {
@@ -144,23 +162,56 @@ export const searchProducts = wrapAsync(async (req, res) => {
     if (maxPrice) query.price.$lte = Number(maxPrice);
   }
 
+  // Build sort options
+  const sortOptions = {};
+  switch (sort) {
+    case "price":
+    case "price-asc":
+      sortOptions.price = 1;
+      break;
+    case "price-desc":
+      sortOptions.price = -1;
+      break;
+    case "popularity":
+      sortOptions.rating = -1;
+      sortOptions.reviews = -1;
+      break;
+    case "newest":
+      sortOptions.createdAt = -1;
+      break;
+    case "oldest":
+      sortOptions.createdAt = 1;
+      break;
+    case "name":
+      sortOptions.name = order === "asc" ? 1 : -1;
+      break;
+    default:
+      sortOptions.createdAt = -1;
+  }
+
   const [products, total] = await Promise.all([
     Product.find(query)
+      .populate(populateProductVendor())
+      .populate(populateProductReviews())
       .skip(skip)
-      .limit(Number(limit))
-      .populate("vendor", "name email")
-      .sort(sort === "price-asc" ? { price: 1 } : { createdAt: -1 }),
+      .limit(parseInt(limit))
+      .sort(sortOptions),
     Product.countDocuments(query),
   ]);
+
+  const totalPages = Math.ceil(total / parseInt(limit));
+  const currentPage = parseInt(page);
 
   res.status(200).json({
     success: true,
     data: products,
     pagination: {
       total,
-      page: Number(page),
-      pages: Math.ceil(total / limit),
-      limit: Number(limit),
+      page: currentPage,
+      pages: totalPages,
+      limit: parseInt(limit),
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
     },
   });
 });

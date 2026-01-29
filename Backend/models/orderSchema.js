@@ -65,11 +65,16 @@ const orderSchema = new Schema(
       enum: ["Pending", "Paid", "Failed"],
       default: "Pending",
     },
+    stripeSessionId: {
+      type: String,
+      required: false,
+      default: null,
+    },
     createdAt: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
     deletedAt: { type: Date, default: null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Order = mongoose.model("Order", orderSchema);

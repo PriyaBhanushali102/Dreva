@@ -19,6 +19,7 @@ export const register = wrapAsync(async (req, res, next) => {
       .join(",");
     throw new AppError(errorMessage, 400);
   }
+
   //check if user already exsist
   const exsistingUser = await User.findOne({ email: user.email });
   if (exsistingUser) {
@@ -48,8 +49,8 @@ export const register = wrapAsync(async (req, res, next) => {
   //store token in cookie
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
   });
 
   //remove pass from response
@@ -87,8 +88,8 @@ export const loginUser = wrapAsync(async (req, res) => {
   // Set token in cookie
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
   });
 
   //remove password from response
@@ -106,8 +107,8 @@ export const loginUser = wrapAsync(async (req, res) => {
 export const logoutUser = wrapAsync(async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    samesite: "strict",
+    secure: true,
+    samesite: "none",
   });
 
   res.status(200).json({
@@ -309,7 +310,7 @@ export const getCart = wrapAsync(async (req, res) => {
       },
     });
   }
-  //// Fetch from Session with product details
+  // Fetch from Session with product details
   const sessionCart = [];
   (req.session.cart || []).forEach((item) => {
     sessionCart.push({

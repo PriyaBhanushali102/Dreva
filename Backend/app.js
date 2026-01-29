@@ -1,11 +1,4 @@
 import dotenv from "dotenv";
-
-// if (process.env.NODE_ENV === "production") {
-//   dotenv.config({
-//     path: "config/.env",
-//   });
-// }
-
 import express from "express";
 import { connectDB } from "./config/db.js";
 import session from "express-session";
@@ -15,6 +8,8 @@ import vendorRoutes from "./routes/vendorRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import { handleWebhook } from "./controllers/paymentControllers.js";
 import { handle404, globalErrorHandler } from "./middlewares/ErrorHandler.js";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -35,6 +30,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.post(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" }),
+  handleWebhook,
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -66,6 +66,7 @@ app.use("/api/vendors", vendorRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Undefined routes handler
 app.use(handle404);

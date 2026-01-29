@@ -53,10 +53,9 @@ export const registerVendor = wrapAsync(async (req, res) => {
   //store token in cookie
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
   });
 
   //remove pass from response
@@ -96,8 +95,8 @@ export const loginVendor = wrapAsync(async (req, res) => {
   // Set token in cookie
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
   });
 
   //remove password from response
@@ -115,8 +114,8 @@ export const loginVendor = wrapAsync(async (req, res) => {
 export const logoutVendor = wrapAsync(async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    samesite: "strict",
+    secure: true,
+    samesite: "none",
   });
 
   res.status(200).json({
