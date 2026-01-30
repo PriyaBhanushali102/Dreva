@@ -16,13 +16,13 @@ import { upload } from "../config/multer.js";
 const router = express.Router();
 
 // Auth routes
-router.post("/register", upload.single("image"), register);
+router.post("/register", upload.single("images"), register);
 router.post("/login", loginUser);
 router.get("/logout", logoutUser);
 
 // User profile
 router.get("/profile", userProtect, getUserProfile);
-router.put("/:userId", upload.single("image"), userProtect, updateUser);
+router.put("/:userId", upload.single("images"), userProtect, updateUser);
 
 // Cart routes
 router.get("/cart", optionalAuth, getCart);

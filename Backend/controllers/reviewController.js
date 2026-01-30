@@ -7,9 +7,8 @@ import { cloudinary } from "../config/cloudinary.js";
 
 export const createReview = wrapAsync(async (req, res) => {
   const { prodId } = req.params;
-  const { rating, comment } = req.body;
+  const { rating, comment } = req.body; // Check if product exists
 
-  // Check if product exists
   const product = await Product.findById(prodId);
   if (!product) {
     throw new AppError("Products not found.", 404);
@@ -21,9 +20,8 @@ export const createReview = wrapAsync(async (req, res) => {
     productName: product.name,
     user: req.user._id,
     product: prodId,
-  });
+  }); // Add uploaded images
 
-  // Add uploaded images
   if (req.files && req.files.length > 0) {
     newReview.images = req.files.map((file) => ({
       url: file.path,
@@ -34,9 +32,8 @@ export const createReview = wrapAsync(async (req, res) => {
   await newReview.save();
 
   product.reviews.push(newReview._id);
-  await product.save();
+  await product.save(); // push review id into user
 
-  // push review id into user
   await User.findByIdAndUpdate(
     req.user._id,
     { $push: { productReviews: newReview._id } },
@@ -101,9 +98,8 @@ export const updateReview = wrapAsync(async (req, res) => {
   }
 
   review.rating = rating || review.rating;
-  review.comment = comment || review.comment;
+  review.comment = comment || review.comment; // Append new images if uploaded
 
-  // Append new images if uploaded
   if (req.files && req.files.length > 0) {
     const newImages = req.files.map((file) => ({
       url: file.path,
@@ -127,9 +123,8 @@ export const deleteReview = wrapAsync(async (req, res) => {
   const review = await Review.findById(id);
   if (!review) {
     throw new AppError("Review not found.", 404);
-  }
+  } // Check authorization
 
-  // Check authorization
   if (
     !review.user ||
     !req.user._id ||
@@ -146,19 +141,16 @@ export const deleteReview = wrapAsync(async (req, res) => {
         console.error(`Failed to delete image ${img.filename}:`, error);
       }
     }
-  }
+  } // Remove review from product
 
-  // Remove review from product
   await Product.findByIdAndUpdate(review.product, {
     $pull: { reviews: review._id },
-  });
+  }); // Remove review reference from User
 
-  // Remove review reference from User
   await User.findByIdAndUpdate(review.user, {
     $pull: { productReviews: review._id },
-  });
+  }); // Review deleted
 
-  // Review deleted
   await Review.findByIdAndDelete(id);
 
   res

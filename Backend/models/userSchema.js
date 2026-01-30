@@ -10,7 +10,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: true,
-      min: [5, "too short name"],
+      min: [4, "too short name"],
     },
     email: {
       type: String,
@@ -23,8 +23,8 @@ const userSchema = new Schema(
       required: true,
     },
     image: {
-      url: String,
-      filename: String,
+      type: String,
+      default: "",
     },
     addresses: [
       {

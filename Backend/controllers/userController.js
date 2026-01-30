@@ -10,53 +10,48 @@ import { JWT_EXPIRATION, JWT_SECRET } from "../config/env.config.js";
 
 //register new user
 export const register = wrapAsync(async (req, res, next) => {
-  const user = req.body;
+  const { name, email, password } = req.body;
 
-  const { error } = userValidatorSchema.validate(user);
+  const { error } = userValidatorSchema.validate(req.body);
   if (error) {
     const errorMessage = error.details
       .map((detail) => detail.message)
       .join(",");
     throw new AppError(errorMessage, 400);
-  }
+  } //check if user already exsist
 
-  //check if user already exsist
-  const exsistingUser = await User.findOne({ email: user.email });
+  const exsistingUser = await User.findOne({ email });
   if (exsistingUser) {
     throw new AppError("User with this email already exists.", 400);
-  }
+  } //hash password
 
-  //hash password
   const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
+  const hashedPassword = await bcrypt.hash(password, salt); // Add image from cloudinary
 
-  // Add image from cloudinary
+  let imageUrl = "";
   if (req.file) {
-    user.image = {
-      url: req.file.path,
-      filename: req.file.filename,
-    };
-  }
+    imageUrl = req.file.path;
+  } //create user
 
-  //create user
-  const newUser = await User.create(user);
+  const newUser = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    image: imageUrl,
+  }); //generate jwt token
 
-  //generate jwt token
-  const token = jwt.sign({ email: user.email, isUser: true }, JWT_SECRET, {
+  const token = jwt.sign({ email: newUser.email, isUser: true }, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION,
-  });
+  }); //store token in cookie
 
-  //store token in cookie
   res.cookie("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-  });
+  }); //remove pass from response
 
-  //remove pass from response
   const userResponse = newUser.toObject();
   delete userResponse.password;
-  console.log(userResponse);
   res.status(200).json({
     success: true,
     token,
@@ -66,33 +61,28 @@ export const register = wrapAsync(async (req, res, next) => {
 
 //login user
 export const loginUser = wrapAsync(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; //find user
 
-  //find user
   const user = await User.findOne({ email });
   if (!user) {
     throw new AppError("User not found.", 404);
-  }
+  } //verify password
 
-  //verify password
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
     throw new AppError("Invalid user credentials.", 401);
-  }
+  } //generate jwt token
 
-  //generate jwt token
   const token = jwt.sign({ email: user.email, isUser: true }, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION,
-  });
+  }); // Set token in cookie
 
-  // Set token in cookie
   res.cookie("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-  });
+  }); //remove password from response
 
-  //remove password from response
   const userResponse = user.toObject();
   delete userResponse.password;
 
@@ -121,7 +111,7 @@ export const logoutUser = wrapAsync(async (req, res) => {
 export const getUserProfile = wrapAsync(async (req, res) => {
   const user = await User.findById(req.user._id)
     .select("-password")
-    .populate("cart")
+    .populate("cart.product")
     .populate("orderHistory")
     .populate("productReviews");
 
@@ -155,10 +145,7 @@ export const updateUser = wrapAsync(async (req, res) => {
   }
 
   if (req.file) {
-    user.image = {
-      url: req.file.path,
-      filename: req.file.filename,
-    };
+    user.image = req.file.path;
   }
 
   user.name = name || user.name;
@@ -168,13 +155,12 @@ export const updateUser = wrapAsync(async (req, res) => {
   user.productReviews = productReviews || user.productReviews;
   user.role = role || user.role;
 
-  if (password) {
+  if (password && password.trim() !== "") {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
   }
-  await user.save();
+  await user.save(); //populated and return
 
-  //populated and return
   const updatedUser = await User.findById(userId)
     .populate("wishlist productReviews")
     .select("-password");
@@ -197,20 +183,17 @@ export const addToCart = wrapAsync(async (req, res) => {
   let qty = parseInt(req.body.quantity, 10);
   if (isNaN(qty) || qty < 1) qty = 1;
 
-  const userId = req.user?._id;
+  const userId = req.user?._id; //find product
 
-  //find product
   const product = await Product.findById(prodId);
   if (!product) {
     throw new AppError("Products not found.", 404);
-  }
+  } // DB cart
 
-  // DB cart
   let dbCart = [];
   if (userId) {
-    const user = await User.findById(userId).populate("cart.product");
+    const user = await User.findById(userId).populate("cart.product"); //check product already in DB cart
 
-    //check product already in DB cart
     const existingItem = user.cart.find(
       (item) => item.product && item.product.toString() === prodId.toString(),
     );
@@ -236,16 +219,14 @@ export const addToCart = wrapAsync(async (req, res) => {
         dbCart,
         total,
       },
-      message: "Product added to  DB cart.",
+      message: "Product added to  DB cart.",
     });
-  }
+  } // For session cart
 
-  // For session cart
   if (!req.session.cart) {
     req.session.cart = [];
-  }
+  } //check product already exsist
 
-  //check product already exsist
   const existingSessionItem = req.session.cart.find(
     (item) =>
       item.product && prodId && item.product.toString() === prodId.toString(),
@@ -277,9 +258,8 @@ export const addToCart = wrapAsync(async (req, res) => {
 
 //get user cart
 export const getCart = wrapAsync(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.user?._id; // Fetch from DB with product details
 
-  // Fetch from DB with product details
   if (userId) {
     const user = await User.findById(userId).populate("cart.product");
 
@@ -309,8 +289,7 @@ export const getCart = wrapAsync(async (req, res) => {
         total,
       },
     });
-  }
-  // Fetch from Session with product details
+  } // Fetch from Session with product details
   const sessionCart = [];
   (req.session.cart || []).forEach((item) => {
     sessionCart.push({
@@ -334,9 +313,8 @@ export const updateCartItem = wrapAsync(async (req, res) => {
     throw new AppError("Quantity must be at least 1.", 400);
   }
 
-  const userId = req.user?._id;
+  const userId = req.user?._id; // DB cart
 
-  // DB cart
   let dbCart = [];
   let total = 0;
   if (userId) {
@@ -372,9 +350,8 @@ export const updateCartItem = wrapAsync(async (req, res) => {
         });
       }
     });
-  }
+  } // Session cart
 
-  // Session cart
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -403,16 +380,14 @@ export const updateCartItem = wrapAsync(async (req, res) => {
 //remove cart item
 export const removeCartItem = wrapAsync(async (req, res) => {
   const { prodId } = req.params;
-  const userId = req.user?._id;
+  const userId = req.user?._id; // Session cart update
 
-  // Session cart update
   if (!req.session.cart) req.session.cart = [];
 
   req.session.cart = req.session.cart.filter(
     (item) => item.product && String(item.product) !== prodId.toString(),
-  );
+  ); // DB cart
 
-  // DB cart
   if (userId) {
     const user = await User.findById(userId).populate("cart.product");
     if (!user) {

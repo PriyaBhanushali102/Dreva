@@ -111,9 +111,9 @@ function Header() {
                                     {/* User Menu */}
                                     <div className="relative" ref={menuRef}>
                                         <div onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer select-none">
-                                            {user?.image ? (
+                                            {user?.images ? (
                                             <img
-                                                src={user.image}
+                                                src={user.images}
                                                 alt={user.name}
                                                 className="w-10 h-10 rounded-full object-cover border border-gray-600"
                                                 onError={(e) => {
@@ -123,7 +123,7 @@ function Header() {
                                             />
                                             ) : null}
                                                                                   
-                                            {!user?.image && <FaUser className="text-xl"/>}     
+                                            {!user?.images && <FaUser className="text-xl"/>}     
                                             <span className="hidden md:block">{user.name}</span>
                                         
                                             <span className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`}>

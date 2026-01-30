@@ -5,14 +5,16 @@ export const config = {
   port: process.env.PORT || 5000,
   mongoUri: process.env.MONGO_URI,
   CORS: {
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
   },
 };
 
-export const JWT_SECRET = process.env.JWT_SECRET || "mysecretkey";
+// Auth
+export const JWT_SECRET =
+  process.env.JWT_SECRET || "default_secret_dont_use_prod";
 export const JWT_EXPIRATION = process.env.TOKEN_EXPIRE || "1h";
 
-// stripe
+// Stripe
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 export const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;

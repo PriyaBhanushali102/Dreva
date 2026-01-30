@@ -9,7 +9,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+  timeout: 30000,
 });
 
 // Request interceptor - Add auth token to requests
@@ -23,7 +23,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor - Handle errors globally
@@ -52,7 +52,7 @@ api.interceptors.response.use(
       // 403 = Forbidden
       if (status === 403) {
         console.error(
-          "Access forbidden: you don't have permission to access this resource."
+          "Access forbidden: you don't have permission to access this resource.",
         );
       }
 
@@ -68,7 +68,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

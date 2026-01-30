@@ -9,15 +9,11 @@ export const registerUser = async (userData) => {
   formData.append("password", userData.password);
 
   if (userData.image) {
-    formData.append("image", userData.image);
+    formData.append("images", userData.image);
   }
 
   // Make API call
-  return await api.post("/users/register", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await api.post("/users/register", formData);
 };
 
 export const loginUser = async (credentials) => {
@@ -42,11 +38,7 @@ export const updateUser = async (userId, userData) => {
   if (userData.addresses)
     formData.append("addresses", JSON.stringify(userData.addresses));
 
-  return await api.put(`/users/${userId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await api.put(`/users/${userId}`, formData);
 };
 
 // VENDOR AUTH
@@ -59,14 +51,10 @@ export const registerVendor = async (vendorData) => {
   formData.append("description", vendorData.description);
 
   if (vendorData.image) {
-    formData.append("image", vendorData.image);
+    formData.append("images", vendorData.image);
   }
 
-  return await api.post("/vendors/register", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await api.post("/vendors/register", formData);
 };
 
 export const loginVendor = async (credentials) => {
@@ -99,11 +87,7 @@ export const updateVendor = async (vendorId, vendorData) => {
   if (vendorData.description)
     formData.append("description", vendorData.description);
 
-  return await api.put(`/vendors/${vendorId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await api.put(`/vendors/${vendorId}`, formData);
 };
 
 export const deleteVendor = async () => {

@@ -24,9 +24,8 @@ export const createOrder = wrapAsync(async (req, res) => {
 
   if (!token) {
     throw new AppError("Please login to place order.", 401);
-  }
+  } // Decoded token
 
-  // Decoded token
   const decoded = jwt.verify(token, key);
 
   const user = await User.findOne({ email: decoded.email }).populate(
@@ -34,9 +33,8 @@ export const createOrder = wrapAsync(async (req, res) => {
   );
   if (!user) {
     throw new AppError("User not found.", 404);
-  }
+  } // If cart is in DB
 
-  // If cart is in DB
   const cartItems = user.cart || [];
   if (!cartItems || cartItems.length === 0) {
     throw new AppError("Cart is empty.", 400);
@@ -61,9 +59,8 @@ export const createOrder = wrapAsync(async (req, res) => {
           reason: "product not found",
         });
         continue;
-      }
+      } //check availability
 
-      //check availability
       if (!product.quantity || product.quantity < item.quantity) {
         InsufficientProducts.push({
           name: product.name,
@@ -72,15 +69,13 @@ export const createOrder = wrapAsync(async (req, res) => {
           reason: "Insufficient stock",
         });
         continue;
-      }
+      } //update product qty in DB
 
-      //update product qty in DB
       product.quantity -= item.quantity;
       await product.save({ session });
 
-      const vendorId = product.vendor.toString();
+      const vendorId = product.vendor.toString(); // Group by vendor
 
-      // Group by vendor
       if (!vendorGroups[vendorId]) {
         vendorGroups[vendorId] = [];
       }
@@ -98,9 +93,8 @@ export const createOrder = wrapAsync(async (req, res) => {
     if (InsufficientProducts.length > 0) {
       await session.abortTransaction();
       throw new AppError("Some products are unavailable", 400);
-    }
+    } //now apply tax to order
 
-    //now apply tax to order
     const tax = Math.round(total * TAX_RATE);
     const finalTotal = total + tax;
 
@@ -124,13 +118,11 @@ export const createOrder = wrapAsync(async (req, res) => {
       );
       createdOrders.push(order[0]);
       user.orderHistory.push(order[0]._id);
-    }
+    } // Clear cart in DB
 
-    // Clear cart in DB
     user.cart = [];
-    await user.save({ session });
+    await user.save({ session }); // Commit transaction
 
-    // Commit transaction
     await session.commitTransaction();
 
     const totalQuantity = createdOrders.reduce(
@@ -234,9 +226,8 @@ export const getOrderById = wrapAsync(async (req, res) => {
 
   if (!order) {
     throw new AppError("Order not found.", 404);
-  }
+  } //check if user is authorized to view this order
 
-  //check if user is authorized to view this order
   const isCustomer = order.customer._id.toString() === req.user._id.toString();
 
   if (!isCustomer) {
@@ -256,9 +247,8 @@ export const getVendorOrders = wrapAsync(async (req, res) => {
   const vendor = req.vendor;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 12;
-  const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit; //get all order that contains vendor's product
 
-  //get all order that contains vendor's product
   const [orders, total] = await Promise.all([
     Order.find({
       "items.vendor": req.vendor._id,
@@ -308,9 +298,8 @@ export const updateOrderStatus = wrapAsync(async (req, res) => {
 
   if (!order) {
     throw new AppError("Order not found.", 404);
-  }
+  } // Check if vendor owns this order
 
-  // Check if vendor owns this order
   const hasVendorItems = order.items.some(
     (item) => item.vendor.toString() === req.vendor._id.toString(),
   );
@@ -336,14 +325,12 @@ export const deleteOrder = wrapAsync(async (req, res) => {
 
   if (!order) {
     throw new AppError("Order not found.", 404);
-  }
+  } // Check if user owns this order
 
-  // Check if user owns this order
   if (order.customer.toString() !== req.user._id.toString()) {
     throw new AppError("Not authorized to delete this order", 403);
-  }
+  } // Only allow cancellation if order is still processing
 
-  // Only allow cancellation if order is still processing
   if (order.status !== "Processing") {
     throw new AppError(
       "Cannot cancel order that is already shipped or delivered.",

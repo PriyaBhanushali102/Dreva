@@ -13,12 +13,12 @@ function RegisterForm() {
     email: "",
     password: "",
     description: "", // vendor only
-    image: null,
+    images: null,
   });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setFormData({ ...formData, image: file });
+    setFormData({ ...formData, images: file });
   };
 
   const handleSubmit = async (e) => {
@@ -163,11 +163,11 @@ function RegisterForm() {
 
             {/* Image Upload */}
             <div className="space-y-2">
-              <label htmlFor="image" className="block text-sm font-semibold text-slate-700">
+              <label htmlFor="images" className="block text-sm font-semibold text-slate-700">
                 Profile Image
               </label>
-              <Input
-                id="image"
+              <input
+                id="images"
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}

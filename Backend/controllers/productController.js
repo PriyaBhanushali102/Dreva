@@ -18,9 +18,8 @@ const populateProductVendor = () => ({
 
 //add product by vendor
 export const addProduct = wrapAsync(async (req, res) => {
-  let product = {};
+  let product = {}; // check if form-data "product" passed
 
-  // check if form-data "product" passed
   if (req.body.product) {
     try {
       product = JSON.parse(req.body.product);
@@ -45,9 +44,8 @@ export const addProduct = wrapAsync(async (req, res) => {
   const newProduct = new Product({
     ...product,
     vendor: vendorId,
-  });
+  }); // Add image from cloudinary
 
-  // Add image from cloudinary
   if (req.files && req.files.length > 0) {
     newProduct.images = req.files.map((file) => ({
       url: file.path,
@@ -143,26 +141,22 @@ export const searchProducts = wrapAsync(async (req, res) => {
       { category: { $regex: search, $options: "i" } },
       { brand: { $regex: search, $options: "i" } },
     ];
-  }
+  } // Category filter
 
-  // Category filter
   if (category && category !== "all" && category !== "") {
     query.category = category;
-  }
+  } // Brand filter
 
-  // Brand filter
   if (brand && brand !== "all" && brand !== "") {
     query.brand = brand;
-  }
+  } // Price range
 
-  // Price range
   if (minPrice || maxPrice) {
     query.price = {};
     if (minPrice) query.price.$gte = Number(minPrice);
     if (maxPrice) query.price.$lte = Number(maxPrice);
-  }
+  } // Build sort options
 
-  // Build sort options
   const sortOptions = {};
   switch (sort) {
     case "price":
@@ -237,9 +231,8 @@ export const updateProduct = wrapAsync(async (req, res) => {
 
   if (product.vendor.toString() !== req.vendor._id.toString()) {
     throw new AppError("Not authorized to update this product", 403);
-  }
+  } // update basic fields
 
-  // update basic fields
   Object.assign(product, productData);
 
   const existingImages = req.body.existingImages
@@ -250,9 +243,8 @@ export const updateProduct = wrapAsync(async (req, res) => {
       existingImages.map((img) => [img.url + img.filename, img]),
     ).values(),
   );
-  product.images = uniqueImages;
+  product.images = uniqueImages; // If new images uploaded, push to array
 
-  // If new images uploaded, push to array
   if (req.files && req.files.length > 0) {
     req.files.forEach((file) => {
       const newImage = {
@@ -286,9 +278,8 @@ export const deleteProduct = wrapAsync(async (req, res) => {
 
   if (product.vendor.toString() !== req.vendor._id.toString()) {
     throw new AppError("Not authorized to delete this product", 403);
-  }
+  } // Delete product images from cloudinary
 
-  // Delete product images from cloudinary
   for (let img of product.images) {
     if (img.filename) {
       await cloudinary.uploader.destroy(img.filename);

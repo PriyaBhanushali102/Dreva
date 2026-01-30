@@ -10,9 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export { cloudinary };
-
-export const storage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "Dreeva",
@@ -20,4 +18,5 @@ export const storage = new CloudinaryStorage({
   },
 });
 
+export { cloudinary, storage };
 export default cloudinary;

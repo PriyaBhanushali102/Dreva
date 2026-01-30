@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Container, Button, Loader } from "../components";
 import { useAuth } from "../hooks/useAuth";
-import axios from "axios";
+import api from "../services/api";
 import toast from "react-hot-toast";
 import { FaBox, FaShippingFast, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
@@ -28,9 +28,7 @@ function OrderHistory() {
 
             try {
                 setLoading(true);
-                const response = await axios.get(`/api/orders/history?page=${page}&limit=12`, {
-                    withCredentials: true,
-                });
+                const response = await api.get(`/orders/history?page=${page}&limit=12`);
                 setOrders(response.data.data || []);
                 setPagination(response.data.pagination || {});
                 setError(null);
@@ -51,8 +49,8 @@ function OrderHistory() {
         }
         try {
             const order = orders.find(o => o.id === orderId);
-            if (order && orders.status == "Processing") {
-                await axios.delete(`api/orders/${orderId}`, {
+            if (order && order.status == "Processing") {
+                await api.delete(`/orders/${orderId}`, {
                     withCredentials: true,
                 });
                 toast.success("Order cancelled successfully");

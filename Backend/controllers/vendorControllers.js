@@ -18,47 +18,40 @@ export const registerVendor = wrapAsync(async (req, res) => {
       .map((detail) => detail.message)
       .join(", ");
     throw new AppError(errorMessage, 400);
-  }
+  } //check if alreadyexsist
 
-  //check if alreadyexsist
   const exsistingVendor = await Vendor.findOne({ email: vendor.email });
   if (exsistingVendor) {
     throw new AppError("Vendor with this email already exists.", 400);
-  }
+  } //hash password
 
-  //hash password
   const salt = await bcrypt.genSalt(10);
-  vendor.password = await bcrypt.hash(vendor.password, salt);
+  vendor.password = await bcrypt.hash(vendor.password, salt); // Add image from cloudinary
 
-  // Add image from cloudinary
   if (req.file) {
     vendor.image = {
       url: req.file.path,
       filename: req.file.filename,
     };
-  }
+  } //create vendor
 
-  //create vendor
-  const newVendor = await Vendor.create(vendor);
+  const newVendor = await Vendor.create(vendor); //generate jwt token
 
-  //generate jwt token
   const token = jwt.sign(
     { email: newVendor.email, isVendor: true },
     JWT_SECRET,
     {
       expiresIn: JWT_EXPIRATION,
     },
-  );
+  ); //store token in cookie
 
-  //store token in cookie
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "lax",
     secure: true,
     sameSite: "none",
-  });
+  }); //remove pass from response
 
-  //remove pass from response
   const vendorResponse = newVendor.toObject();
   delete vendorResponse.password;
   console.log(vendorResponse);
@@ -74,32 +67,27 @@ export const loginVendor = wrapAsync(async (req, res) => {
 
   if (!email || !password) {
     throw new AppError("Email and password are required.", 400);
-  }
-  //find vendor
+  } //find vendor
   const vendor = await Vendor.findOne({ email });
   if (!vendor) {
     throw new AppError("Vendor not found.", 404);
-  }
+  } //verify password
 
-  //verify password
   const validPassword = await bcrypt.compare(password, vendor.password);
   if (!validPassword) {
     throw new AppError("Invalid vendor credentials.", 401);
-  }
+  } //generate jwt token
 
-  //generate jwt token
   const token = jwt.sign({ email: vendor.email, isVendor: true }, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION,
-  });
+  }); // Set token in cookie
 
-  // Set token in cookie
   res.cookie("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-  });
+  }); //remove password from response
 
-  //remove password from response
   const vendorResponse = vendor.toObject();
   delete vendorResponse.password;
 
@@ -170,9 +158,8 @@ export const getVendorProduct = wrapAsync(async (req, res) => {
 
 export const updateVendor = wrapAsync(async (req, res) => {
   const { id } = req.params;
-  const updates = req.body;
+  const updates = req.body; //prevent password from update
 
-  //prevent password from update
   if (updates.password) {
     delete updates.password;
   }
@@ -181,9 +168,8 @@ export const updateVendor = wrapAsync(async (req, res) => {
 
   if (!vendor) {
     throw new AppError("Vendor not found.", 404);
-  }
+  } //check if the update vendor is same as authenticate vendor
 
-  //check if the update vendor is same as authenticate vendor
   if (vendor.email !== req.vendor.email) {
     throw new AppError("Not authorized to update profile.", 403);
   }
@@ -193,15 +179,13 @@ export const updateVendor = wrapAsync(async (req, res) => {
       url: req.file.path,
       filename: req.file.filename,
     };
-  }
+  } //update vendor fields
 
-  //update vendor fields
   Object.keys(updates).forEach((key) => {
     vendor[key] = updates[key];
   });
-  await vendor.save();
+  await vendor.save(); //remove password from response
 
-  //remove password from response
   const vendorResponse = vendor.toObject();
   delete vendorResponse.password;
 
@@ -228,9 +212,8 @@ export const deleteVendor = wrapAsync(async (req, res) => {
 export const getVendorReviews = wrapAsync(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
-  const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit; //find all product by this vendor
 
-  //find all product by this vendor
   const products = await Product.find({ vendor: req.vendor._id });
 
   if (!products || products.length === 0) {
@@ -244,12 +227,10 @@ export const getVendorReviews = wrapAsync(async (req, res) => {
         limit,
       },
     });
-  }
+  } //get product ids
 
-  //get product ids
-  const productIds = products.map((product) => product._id);
+  const productIds = products.map((product) => product._id); //find all reviews for these products
 
-  //find all reviews for these products
   const [reviews, total] = await Promise.all([
     Review.find({ product: { $in: productIds } })
       .populate("user", "name")

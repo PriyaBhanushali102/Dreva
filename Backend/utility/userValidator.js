@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const userValidatorSchema = Joi.object({
-  name: Joi.string().min(5).required().messages({
+  name: Joi.string().min(4).required().messages({
     "string.min": "Name is too short.",
     "any-required": "Name is required.",
   }),
@@ -13,7 +13,7 @@ export const userValidatorSchema = Joi.object({
     "string.min": "Password should have atleast 8 character.",
     "any.required": "Password is required.",
   }),
-  image: Joi.any().optional(),
+  image: Joi.string().allow(""),
   addresses: Joi.array()
     .items(
       Joi.object({
