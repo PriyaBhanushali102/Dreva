@@ -72,14 +72,14 @@ function RegisterForm() {
       </div>
 
       {/* RIGHT SIDE: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-8 overflow-y-auto">
-        <div className="w-full max-w-md space-y-6 py-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-4 overflow-y-auto">
+        <div className="w-full max-w-md space-y-6 py-8 my-auto">
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-slate-900">
               Create Account
             </h1>
-            <p className="text-slate-500">
+            <p className="text-slate-500 mb-1">
               {isVendorRegister 
                 ? "Start your business journey today" 
                 : "Create an account to start shopping"}
@@ -94,7 +94,7 @@ function RegisterForm() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-2">
             {/* Name */}
             <div className="space-y-2">
               <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
@@ -106,7 +106,7 @@ function RegisterForm() {
                 placeholder="Full Name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50"
+                className="w-full px-5 py-1 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50"
                 required
               />
             </div>
@@ -154,7 +154,7 @@ function RegisterForm() {
                   placeholder="Describe your business"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows="4"
+                  rows="2"
                   className="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all bg-slate-50/50 resize-none"
                   required
                 />

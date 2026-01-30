@@ -18,8 +18,8 @@ const vendorSchema = new Schema(
       type: String,
     },
     image: {
-      url: String,
-      filename: String,
+      type: String,
+      default: "",
     },
     description: {
       type: String,
@@ -36,7 +36,7 @@ const vendorSchema = new Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 vendorSchema.pre("findOneAndDelete", async function (next) {

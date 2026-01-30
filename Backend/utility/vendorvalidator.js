@@ -13,7 +13,7 @@ export const vendorvalidatorSchema = Joi.object({
     "string.min": "Password should have atleast 8 character.",
     "any.required": "Password is required.",
   }),
-  image: Joi.any().optional(),
+  image: Joi.string().allow(""),
   description: Joi.string().min(20).required().messages({
     "string.min": "Description is too short.",
     "any-required": "Description is required.",
