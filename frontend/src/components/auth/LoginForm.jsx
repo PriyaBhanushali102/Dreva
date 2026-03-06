@@ -104,7 +104,7 @@ function LoginForm() {
                   to="/forgot-password"
                   className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  Forgot?
+                  Forgot Password?
                 </Link>
               </div>
               <input

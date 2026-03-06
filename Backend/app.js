@@ -11,6 +11,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import { handleWebhook } from "./controllers/paymentControllers.js";
 import { handle404, globalErrorHandler } from "./middlewares/ErrorHandler.js";
+import { JWT_SECRET } from "./config/env.config.js";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 
@@ -39,7 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "mysecretkey",
+    secret: JWT_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
