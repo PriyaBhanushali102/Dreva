@@ -8,7 +8,6 @@ function Footer() {
             <div className="relative z-10 mx-auto max-w-7xl px-6">
                 <div className="-m-6 flex flex-wrap">
 
-                    {/* Logo + Copyright */}
                     <div className="w-full p-6 md:w-1/2 lg:w-5/12">
                         <div className="flex h-full flex-col justify-between">
                             <div className="mb-6 flex items-center">
@@ -24,7 +23,6 @@ function Footer() {
                         </div>
                     </div>
 
-                    {/* Shop Section */}
                     <div className="w-full p-6 md:w-1/2 lg:w-2/12">
                         <div className="h-full">
                             <h3 className="mb-5 text-sm font-semibold uppercase tracking-wider text-gray-300">
@@ -68,7 +66,6 @@ function Footer() {
                         </div>
                     </div>
 
-                    {/* Customer Service */}
                     <div className="w-full p-6 md:w-1/2 lg:w-2/12">
                         <div className="h-full">
 
@@ -111,7 +108,6 @@ function Footer() {
                         </div>
                     </div>
 
-                    {/* Company */}
                     <div className="w-full p-6 md:w-1/2 lg:w-3/12">
                         <div className="h-full">
 
@@ -150,7 +146,6 @@ function Footer() {
                         </div>
                     </div>
 
-                     {/* Legal */}
                     <div className="w-full p-6 mt-6 border-t border-gray-700">
                         <div className="h-full">
 

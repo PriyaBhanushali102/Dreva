@@ -6,7 +6,6 @@ function FilterSideBar() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Collapsible sections state
   const [openSections, setOpenSections] = useState({
     category: true,
     brand: true,
@@ -22,19 +21,15 @@ function FilterSideBar() {
     sort: searchParams.get("sort") || "newest",
   });
 
-  // Brand search
   const [brandSearch, setBrandSearch] = useState("");
 
-  // Available categories
   const categories = ["Home & Living", "Fashion", "Beauty", "Accessories"];
 
-  // Popular brands (you can expand this list)
   const allBrands = ["Nike", "Adidas", "Puma", "Zara", "H&M", "Levis", "Allen Solly"];
   const filteredBrands = allBrands.filter(brand => 
     brand.toLowerCase().includes(brandSearch.toLowerCase())
   );
 
-  // Sync with URL changes
   useEffect(() => {
     setFilters({
       category: searchParams.get("category") || "",
@@ -45,23 +40,19 @@ function FilterSideBar() {
     });
   }, [searchParams]);
 
-  // Toggle section
   const toggleSection = (section) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Handle filter change
   const handleFilterChange = (name, value) => {
     const newFilters = { ...filters, [name]: value };
     setFilters(newFilters);
     applyFilters(newFilters);
   };
 
-  // Apply filters to URL
   const applyFilters = (filterData) => {
     const params = new URLSearchParams(searchParams);
 
-    // Update filter params
     if (filterData.category) {
       params.set("category", filterData.category);
     } else {
@@ -95,7 +86,6 @@ function FilterSideBar() {
     navigate(`/products?${params.toString()}`, { replace: true });
   };
 
-  // Clear all filters
   const handleClearFilters = () => {
     const clearedFilters = {
       category: "",
@@ -106,7 +96,6 @@ function FilterSideBar() {
     };
     setFilters(clearedFilters);
     
-    // Keep only the search query
     const params = new URLSearchParams();
     const searchQuery = searchParams.get("search") || searchParams.get("q");
     if (searchQuery) {
@@ -115,7 +104,6 @@ function FilterSideBar() {
     navigate(`/products?${params.toString()}`, { replace: true });
   };
 
-  // Check if any filters are active
   const hasActiveFilters =
     filters.category ||
     filters.brand ||
@@ -125,7 +113,6 @@ function FilterSideBar() {
 
   return (
     <div className="w-full lg:w-72 bg-white border-r border-gray-200 h-screen overflow-y-auto sticky top-0 scrollbar-hide">
-      {/* Header */}
       <div className="p-5 border-b border-gray-200 flex items-center justify-between">
         <h2 className="text-base font-bold text-gray-900 uppercase tracking-wide">
           Filters
@@ -140,7 +127,6 @@ function FilterSideBar() {
         )}
       </div>
 
-      {/* Category Section */}
       <div className="border-b border-gray-200">
         <button
           onClick={() => toggleSection("category")}
@@ -158,7 +144,6 @@ function FilterSideBar() {
         
         {openSections.category && (
           <div className="px-5 pb-4 space-y-3">
-            {/* All Categories Option */}
             <label className="flex items-center cursor-pointer group">
               <input
                 type="checkbox"
@@ -188,7 +173,6 @@ function FilterSideBar() {
         )}
       </div>
 
-      {/* Brand Section */}
       <div className="border-b border-gray-200">
         <button
           onClick={() => toggleSection("brand")}
@@ -206,7 +190,6 @@ function FilterSideBar() {
         
         {openSections.brand && (
           <div className="px-5 pb-4">
-            {/* Search Brand */}
             <div className="relative mb-3">
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
               <input
@@ -218,7 +201,6 @@ function FilterSideBar() {
               />
             </div>
 
-            {/* Brand List */}
             <div className="space-y-3 max-h-48 overflow-y-auto scrollbar-hide">
               {filteredBrands.map((brand) => (
                 <label key={brand} className="flex items-center cursor-pointer group">
@@ -238,7 +220,6 @@ function FilterSideBar() {
         )}
       </div>
 
-      {/* Price Section */}
       <div className="border-b border-gray-200">
         <button
           onClick={() => toggleSection("price")}
@@ -274,7 +255,6 @@ function FilterSideBar() {
               />
             </div>
 
-            {/* Price Range Options */}
             <div className="space-y-3">
               {[
                 { label: "Under ₹500", min: 0, max: 500 },
@@ -311,7 +291,6 @@ function FilterSideBar() {
         )}
       </div>
 
-      {/* Sort By Section */}
       <div className="border-b border-gray-200">
         <button
           onClick={() => toggleSection("sort")}

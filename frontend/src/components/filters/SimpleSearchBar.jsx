@@ -9,12 +9,10 @@ function SimpleSearchBar() {
     searchParams.get("q") || searchParams.get("search") || ""
   );
 
-  // Sync with URL changes
   useEffect(() => {
     setSearchQuery(searchParams.get("q") || searchParams.get("search") || "");
   }, [searchParams]);
 
-  // Handle search submit
   const handleSearch = (e) => {
     e.preventDefault();
     
@@ -36,7 +34,6 @@ function SimpleSearchBar() {
           className="w-full px-4 py-2.5 pr-12 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-700 transition-all"
         />
         
-        {/* Search Button */}
         <Button
           type="submit"
           className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-blue-400 transition"

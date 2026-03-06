@@ -12,7 +12,7 @@ function RegisterForm() {
     name: "",
     email: "",
     password: "",
-    description: "", // vendor only
+    description: "",
     images: null,
   });
 
@@ -34,20 +34,17 @@ function RegisterForm() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      {/* LEFT SIDE: Branding - Hidden on mobile */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-slate-800 to-slate-900 p-12 flex-col justify-between overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
-        {/* Logo */}
         <div className="relative z-10">
           <h1 className="text-white text-5xl font-black tracking-tight">
             DREVA
           </h1>
         </div>
 
-        {/* Main Content */}
         <div className="relative z-10 space-y-6">
           <h2 className="text-white text-5xl font-bold leading-tight">
             {isVendorRegister
@@ -61,20 +58,16 @@ function RegisterForm() {
           </p>
         </div>
 
-        {/* Footer */}
         <div className="relative z-10 flex gap-8 text-slate-400 text-sm">
           <span>✓ Verified Platform</span>
           <span>✓ Secure Payments</span>
         </div>
 
-        {/* Large decorative circle */}
         <div className="absolute -bottom-32 -right-32 w-96 h-96 border-4 border-white/5 rounded-full"></div>
       </div>
 
-      {/* RIGHT SIDE: Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-4 overflow-y-auto">
         <div className="w-full max-w-md space-y-6 py-8 my-auto">
-          {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-slate-900">
               Create Account
@@ -86,7 +79,6 @@ function RegisterForm() {
             </p>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
               {error}
@@ -95,7 +87,6 @@ function RegisterForm() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
-            {/* Name */}
             <div className="space-y-2">
               <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
                 Name
@@ -111,7 +102,6 @@ function RegisterForm() {
               />
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
                 Email
@@ -127,7 +117,6 @@ function RegisterForm() {
               />
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
                 Password
@@ -143,7 +132,6 @@ function RegisterForm() {
               />
             </div>
 
-            {/* Vendor-only fields */}
             {isVendorRegister && (
               <div className="space-y-2">
                 <label htmlFor="description" className="block text-sm font-semibold text-slate-700">
@@ -161,7 +149,6 @@ function RegisterForm() {
               </div>
             )}
 
-            {/* Image Upload */}
             <div className="space-y-2">
               <label htmlFor="images" className="block text-sm font-semibold text-slate-700">
                 Profile Image
@@ -175,7 +162,6 @@ function RegisterForm() {
               />
             </div>
 
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isLoading}
@@ -187,7 +173,6 @@ function RegisterForm() {
             </Button>
           </form>
 
-          {/* Footer Links */}
           <div className="space-y-4 text-center">
             <p className="text-slate-600 text-sm">
               Already have an account?{" "}

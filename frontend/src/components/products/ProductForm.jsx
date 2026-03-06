@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 function ProductForm({ initialData, onSuccess, onCancel }) {
   const { isVendor, isAuthenticated } = useAuth();
 
-  // Form state
   const [formData, setFormData] = useState({
     name: "",
     brand: "",
@@ -20,12 +19,10 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
     delivery: "",
   });
 
-  // Images
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load initial data if editing
   useEffect(() => {
     if (initialData) {
       const { images = [], ...rest } = initialData;
@@ -44,13 +41,11 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
     );
   }
 
-  // Form field change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Image upload
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     const totalImages = existingImages.length + newImages.length + files.length > 5
@@ -66,7 +61,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
     setNewImages((prev) => [...prev, ...filteredFiles]);
   };
 
-  // Remove images
   const removeExistingImage = (index) => {
     setExistingImages((prev) => prev.filter((_, i) => i !== index));
   };
@@ -75,7 +69,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
     setNewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -143,7 +136,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
         {initialData ? "Edit Product" : "Add New Product"}
       </h3>
 
-      {/* BASIC INFO */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <label className="form-label">Product Name : </label>
@@ -222,7 +214,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* DESCRIPTION */}
       <div className="mt-5">
         <label className="form-label">Product Description : </label>
         <textarea
@@ -237,7 +228,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
         />
       </div>
 
-      {/* EXISTING IMAGES */}
       {existingImages.length > 0 && (
         <div className="mt-5">
           <p className="font-medium mb-2">Existing Images :</p>
@@ -262,7 +252,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
         </div>
       )}
 
-      {/* NEW IMAGES */}
       <div className="mt-5">
         <label className="form-label">Product Images (Max 5) : </label>
         <Input
@@ -278,7 +267,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
           </p>
         )}
 
-        {/* Preview new images */}
         {newImages.length > 0 && (
           <div className="flex gap-3 flex-wrap mt-2">
             {newImages.map((img, index) => (
@@ -301,7 +289,6 @@ function ProductForm({ initialData, onSuccess, onCancel }) {
         )}
       </div>
 
-      {/* ACTION BUTTONS */}
       <div className="mt-8 flex gap-4">
         <Button type="submit" disabled={isLoading} className="flex-1">
           {isLoading

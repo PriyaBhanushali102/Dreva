@@ -37,7 +37,6 @@ function ProductDetail() {
 
   return (
     <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-10">
-      {/* LEFT: Image */}
       <div className="border rounded-lg p-4">
         <img
           src={product.images?.[0]?.url || "/placeholder.jpg"}
@@ -46,13 +45,11 @@ function ProductDetail() {
         />
       </div>
 
-      {/* RIGHT: Info */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800 mb-2">
           {product.name}
         </h1>
 
-        {/* Rating */}
         <div className="flex items-center gap-2 mb-4">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
@@ -71,17 +68,14 @@ function ProductDetail() {
           </span>
         </div>
 
-        {/* Price */}
         <p className="text-2xl font-semibold text-black mb-4">
           ₹{product.price}
         </p>
 
-        {/* Description */}
         <p className="text-gray-600 mb-6 leading-relaxed">
           {product.description}
         </p>
 
-        {/* Add to Cart */}
         <Button
           type="button"
           onClick={handleAddToCart}

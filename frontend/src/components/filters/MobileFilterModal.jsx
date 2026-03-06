@@ -116,15 +116,12 @@ function MobileFilterModal({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
         onClick={onClose}
       />
 
-      {/* Modal */}
       <div className="fixed inset-y-0 left-0 w-80 bg-white z-50 overflow-y-auto lg:hidden scrollbar-hide">
-        {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
           <h2 className="text-lg font-bold text-gray-900 uppercase">Filters</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
@@ -132,7 +129,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Clear All */}
         {hasActiveFilters && (
           <div className="px-4 py-3 border-b border-gray-200">
             <button
@@ -144,7 +140,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           </div>
         )}
 
-        {/* Category Section */}
         <div className="border-b border-gray-200">
           <button
             onClick={() => toggleSection("category")}
@@ -189,7 +184,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           )}
         </div>
 
-        {/* Brand Section */}
         <div className="border-b border-gray-200">
           <button
             onClick={() => toggleSection("brand")}
@@ -235,7 +229,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           )}
         </div>
 
-        {/* Price Section */}
         <div className="border-b border-gray-200">
           <button
             onClick={() => toggleSection("price")}
@@ -305,7 +298,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           )}
         </div>
 
-        {/* Sort By Section */}
         <div className="border-b border-gray-200">
           <button
             onClick={() => toggleSection("sort")}
@@ -346,7 +338,6 @@ function MobileFilterModal({ isOpen, onClose }) {
           )}
         </div>
 
-        {/* Apply Button - Sticky at Bottom */}
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
           <Button
             onClick={applyFilters}

@@ -15,7 +15,6 @@ function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
-    // close if you click anywhere outside of it
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -57,12 +56,10 @@ function Header() {
                             </Link>
                         </div>
 
-                        {/* Simple Search Bar - Clean like Myntra/Amazon */}
                         <div className="hidden md:flex flex-1 max-w-2xl mx-4">
                             <SimpleSearchBar />
                         </div>
 
-                        {/* Navigation */}
                         <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">
                             <Link
                                 to="/"
@@ -72,7 +69,6 @@ function Header() {
                             {user ? (
                                 <> 
                                     {isVendor ? (
-                                        // Vendor Navigation
                                         <>
                                             <Link
                                                 to="/products"
@@ -87,7 +83,6 @@ function Header() {
                                             </Link>
                                         </>
                                     ) : (
-                                            // User Navigation
                                             <>
                                                 <Link
                                                     to="/orders"
@@ -108,7 +103,6 @@ function Header() {
                                             </>
                                     )}
 
-                                    {/* User Menu */}
                                     <div className="relative" ref={menuRef}>
                                         <div onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer select-none">
                                             {user?.images ? (
@@ -151,7 +145,6 @@ function Header() {
                                     </div>
                                 </>
                             ) : (
-                                    // Guest Navigation
                                     <>
                                         <Link
                                             to="/login"

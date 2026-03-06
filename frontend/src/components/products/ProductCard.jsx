@@ -27,7 +27,6 @@ function ProductCard({ product, compact = false, onDelete}) {
                 ? "p-2 shadow-sm hover:shadow-md"
                 : "shadow-md hover:shadow-xl"} flex flex-col`}>
             
-            {/* Image */}
             <Link to={`/products/${product._id}`}>
                 <div className={`relative bg-gray-100 ${compact ? "h-36" : "h-48"}`}>
                     <img
@@ -46,7 +45,6 @@ function ProductCard({ product, compact = false, onDelete}) {
                 </div>
             </Link>
 
-            {/* Content */}
             <div className={`${compact ? "p-1" : "p-2"} flex-1 flex flex-col`}>
                 <Link to={`/products/${product._id}`}>
                     <h3 className="font-semibold text-sm truncate hover:text-blue-600">
@@ -60,7 +58,6 @@ function ProductCard({ product, compact = false, onDelete}) {
                     </p>
                 )}
                
-                {/* Rating */}
                 <div className="flex items-center my-1">
                    
                         {[...Array(5)].map((_, i) => (
@@ -76,19 +73,16 @@ function ProductCard({ product, compact = false, onDelete}) {
                     </span>
                 </div>
 
-                {/* Price */}
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-blue-600 font-bold">
                         ₹{product.price}
                     </span>
 
                     {isOwner ? (
-                        /* For the Vendor: Show exact stock count */
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${product.quantity > 5 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                             Stock: {product.quantity}
                         </span>
                     ) : (
-                        /* For the Customer: Show "Low Stock" warning if quantity is low but > 0 */
                         product.quantity > 0 && product.quantity <= 5 && (
                             <span className="text-red-500 text-[10px] font-bold animate-pulse">
                                 Only {product.quantity} left!
@@ -99,10 +93,8 @@ function ProductCard({ product, compact = false, onDelete}) {
 
 
 
-                {/* --- CONDITIONAL ACTIONS --- */}
                 <div className="mt-auto">
                     {isOwner ? (
-                        /* Show Edit/Delete for the Vendor who owns the product */
                         <div className="flex gap-2">
                             <Link to={`/vendor/products/${product._id}`} className="flex-1">
                                 <Button className="w-full flex items-center justify-center gap-2 text-xs py-2">
@@ -121,7 +113,6 @@ function ProductCard({ product, compact = false, onDelete}) {
                             </Button>
                         </div>
                     ) : (
-                        /* Show Add to Cart for regular users or visitors */
                         <Button
                             onClick={handleAddToCart}
                             disabled={isVendor || product.quantity === 0 || isLoading}

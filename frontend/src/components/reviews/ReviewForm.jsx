@@ -28,7 +28,6 @@ function ReviewForm({ onSubmit, loading }) {
         Write a Review
       </h3>
 
-      {/* Rating */}
       <div className="mb-5">
         <label className="block mb-2 text-sm font-semibold text-gray-700">
           Your Rating
@@ -63,7 +62,6 @@ function ReviewForm({ onSubmit, loading }) {
         </div>
       </div>
 
-      {/* Comment */}
       <div className="mb-6">
         <label className="block mb-2 text-sm font-semibold text-gray-700">
           Your Review
@@ -80,7 +78,6 @@ function ReviewForm({ onSubmit, loading }) {
         />
       </div>
 
-      {/* Image Upload */}
       <div className="mb-6">
         <label className="block mb-2 text-sm font-semibold text-gray-700">
           Upload Images (optional)
@@ -97,7 +94,6 @@ function ReviewForm({ onSubmit, loading }) {
         )}
       </div>
 
-      {/* Submit */}
       <Button
         type="submit"
         disabled={loading}
